@@ -4,40 +4,35 @@ census_year_short = "20"
 
 	[census_urls.census_blocks]
 	directory_template = "https://www2.census.gov/geo/tiger/TIGER{directory_year}/TABBLOCK{census_year_short}/"
-	file_template = "tl_{directory_year}_{state_fips}_tabblock{census_year_short}.zip"
+	filename_template = "tl_{directory_year}_{state_fips}_tabblock{census_year_short}.zip"
 	directory_year = "2024"
 
 	[census_urls.state_boundaries]
 	directory_template = "https://www2.census.gov/geo/tiger/GENZ{directory_year}/shp/"
-	file_template = "cb_{directory_year}_us_state_{boundary_resolution}.zip"
+	filename_template = "cb_{directory_year}_us_state_{boundary_resolution}.zip"
 	directory_year = "2018"
 	boundary_resolution = "500k"
 
 	[census_urls.FIPS_identifiers]
 	directory = "https://www2.census.gov/geo/docs/reference/"
-	file = "state.txt"
+	filename = "state.txt"
 
 	[census_urls.apportionment_population]
 	directory_template = "https://www2.census.gov/programs-surveys/decennial/{census_year}/data/apportionment/"
-	states_only_file_template = "apportionment-{census_year}-table01.xlsx"
-	states_dc_pr_file_template = "apportionment-{census_year}-tableA.xlsx"
+	states_filename_template = "apportionment-{census_year}-table01.xlsx"
+	states_dc_pr_filename_template = "apportionment-{census_year}-tableA.xlsx"
 
 
 [saved_data]
 directory = "data"
 
 	[saved_data.downloads]
-	default_directory = "downloads"
-	alternate_path = false
-	alternate_directory = ""
+	directory = "downloads"
 
-	
 	[saved_data.cleaned_tables]
 	directory = "prepared"
 	
 	[saved_data.state_census_blocks]
-	default_directory = "state_census_blocks"
-	alternate_path = false
-	alternate_directory = ""
+	directory = "state_census_blocks"
 	
 
