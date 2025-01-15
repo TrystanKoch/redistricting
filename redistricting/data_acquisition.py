@@ -95,3 +95,76 @@ def download_state_population_table():
     destination = os.path.join(data_directory, downloads_directory, filename)
 
     download_file(url, destination)
+
+
+def ensure_state_census_blocks(fips_id):
+    """
+    Checks whether we already have the census blocks, downloads them if not.
+
+    :param fips_id: The two digit FIPS identifier for a particular state.
+    :type fips_id: int or str
+    """
+    with open(CONFIG, "rb") as config_file:
+        config = tomllib.load(config_file)
+
+    census_block_directory = os.path.join(
+        config["saved_data"]["directory"],
+        config["saved_data"]["state_census_blocks"]["directory"]
+    )
+
+    try:
+        os.makedirs(census_block_directory)
+    except OSError:
+        pass
+    else:
+        print(f"Created directory: {census_block_directory}")
+
+    census_block_config = config["census_urls"]["census_blocks"]
+    filename_template = census_block_config["filename_template"]
+    filename = filename_template.format(
+        directory_year = census_block_config["directory_year"],
+        census_year_short = config["census_urls"]["census_year_short"],
+        state_fips = f"{fips_id:02}",
+    )
+
+    destination = os.path.join(census_block_directory, filename)
+    if os.path.isfile(destination):
+        redownload_input = input(f"{destination} exists. Redownload? [y/n]")
+        if redownload_input not in ["y", "Y", "Yes", "yes"]:
+            return
+    print(f"Downloading {destination}")
+    download_state_census_blocks(fips_id)
+
+
+def download_state_census_blocks(fips_id):
+    """
+    Downloads the shapefile containing a state's census data at the block level.
+    
+    :param fips_id: The two digit FIPS identifier for a particular state.
+    :type fips_id: int or str
+    """
+    with open(CONFIG, "rb") as config_file:
+        config = tomllib.load(config_file)
+
+    census_block_config = config["census_urls"]["census_blocks"]
+
+    url_directory_template = census_block_config["directory_template"]
+    url_directory = url_directory_template.format(
+        directory_year = census_block_config["directory_year"],
+        census_year_short = config["census_urls"]["census_year_short"]
+    )
+
+    filename_template = census_block_config["filename_template"]
+    filename = filename_template.format(
+        directory_year = census_block_config["directory_year"],
+        census_year_short = config["census_urls"]["census_year_short"],
+        state_fips = f"{fips_id:02}",
+    )
+
+    url = f"{url_directory}/{filename}"
+
+    data_directory = config["saved_data"]["directory"]
+    downloads_directory = config["saved_data"]["state_census_blocks"]["directory"]
+    destination = os.path.join(data_directory, downloads_directory, filename)
+
+    download_file(url, destination)
