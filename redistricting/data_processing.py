@@ -76,7 +76,7 @@ def create_country_data():
     us_dc_pr_total = pops.loc[pops["STATE"] == "U.S. Total and Puerto Rico"].iloc[0,1]
 
     country_data = pd.DataFrame({
-        "REGION": ["US", "US+DC", "US+DC+PR"],
+        "REGION": ["US", "US_DC", "US_DC_PR"],
         "POP20" : [us_total, us_dc_total, us_dc_pr_total]
     })
 
