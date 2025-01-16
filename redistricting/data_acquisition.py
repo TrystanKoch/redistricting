@@ -51,7 +51,7 @@ def ensure_census_file(directory, filename, url, redownload=False, interactive=F
     # Check if file exists. If not, or if redownload is wanted, download it.
     destination = os.path.join(directory, filename)
     if not os.path.isfile(destination) or redownload:
-        if interactive:
+        if interactive and not redownload:
             download_wanted = input(f"{destination} not found. Download it? [y/n]? ")
             if download_wanted not in ["y", "Y", "yes", "Yes", "YES"]:
                 return False
