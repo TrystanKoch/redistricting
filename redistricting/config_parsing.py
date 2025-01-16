@@ -129,6 +129,21 @@ def state_population_url(config=None):
     return url
 
 
+def state_population_location(config=None):
+    """
+    Return full relative filename for census state population file.
+    
+    :param config: Optional configuration dictionary.
+    :type config: Optional[dict]
+    """
+    config = ensure_config(config)
+    location = os.path.join(
+        state_population_directory(config),
+        state_population_filename(config)
+    )
+    return location
+
+
 def fips_identifiers_directory(config=None):
     """
     Return directory for census state FIPS identification file.
@@ -168,6 +183,21 @@ def fips_identifiers_url(config=None):
     filename = fips_identifiers_filename()
     url = f"{url_directory}/{filename}"
     return url
+
+
+def fips_identifiers_location(config=None):
+    """
+    Return full relative filename for census state FIPS identification file.
+    
+    :param config: Optional configuration dictionary.
+    :type config: Optional[dict]
+    """
+    config = ensure_config(config)
+    location = os.path.join(
+        fips_identifiers_directory(config),
+        fips_identifiers_filename(config)
+    )
+    return location
 
 
 def census_block_directory(config=None):
@@ -220,3 +250,90 @@ def census_block_url(fips_id, config=None):
     filename = census_block_filename(fips_id)
     url = f"{url_directory}/{filename}"
     return url
+
+
+def state_data_directory(config=None):
+    """
+    Return directory for processed state population lookup table.
+    
+    :param config: Optional configuration dictionary.
+    :type config: Optional[dict]
+    """
+    config = ensure_config(config)
+    directory = os.path.join(
+        config["saved_data"]["directory"],
+        config["saved_data"]["cleaned_tables"]["directory"],
+    )
+    return directory
+
+
+def state_data_filename(config=None):
+    """
+    Return filename for processed state population lookup table.
+    
+    :param config: Optional configuration dictionary.
+    :type config: Optional[dict]
+    """
+    config = ensure_config(config)
+    filename = os.path.join(
+        config["saved_data"]["cleaned_tables"]["state_data"]["filename"],
+    )
+    return filename
+
+def state_data_location(config=None):
+    """
+    Return full relative filename for processed state population lookup table.
+    
+    :param config: Optional configuration dictionary.
+    :type config: Optional[dict]
+    """
+    config = ensure_config(config)
+    location = os.path.join(
+        state_data_directory(config),
+        state_data_filename(config)
+    )
+    return location
+
+
+def country_data_directory(config=None):
+    """
+    Return directory for processed US population lookup table.
+    
+    :param config: Optional configuration dictionary.
+    :type config: Optional[dict]
+    """
+    config = ensure_config(config)
+    directory = os.path.join(
+        config["saved_data"]["directory"],
+        config["saved_data"]["cleaned_tables"]["directory"],
+    )
+    return directory
+
+
+def country_data_filename(config=None):
+    """
+    Return filename for processed US population lookup table.
+    
+    :param config: Optional configuration dictionary.
+    :type config: Optional[dict]
+    """
+    config = ensure_config(config)
+    filename = os.path.join(
+        config["saved_data"]["cleaned_tables"]["country_data"]["filename"],
+    )
+    return filename
+
+
+def country_data_location(config=None):
+    """
+    Return full relative filename for processed US population lookup table.
+    
+    :param config: Optional configuration dictionary.
+    :type config: Optional[dict]
+    """
+    config = ensure_config(config)
+    location = os.path.join(
+        country_data_directory(config),
+        country_data_filename(config)
+    )
+    return location

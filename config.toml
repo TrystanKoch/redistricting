@@ -19,8 +19,8 @@ census_year_short = "20"
 
 	[census_urls.apportionment_population]
 	directory_template = "https://www2.census.gov/programs-surveys/decennial/{census_year}/data/apportionment/"
-	states_filename_template = "apportionment-{census_year}-table01.xlsx"
-	states_dc_pr_filename_template = "apportionment-{census_year}-tableA.xlsx"
+	states_only_filename_template = "apportionment-{census_year}-table01.xlsx"
+	states_filename_template = "apportionment-{census_year}-tableA.xlsx"
 
 
 [saved_data]
