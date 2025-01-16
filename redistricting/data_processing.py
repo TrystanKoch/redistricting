@@ -1,5 +1,6 @@
 """Functions to turn the census files into cleaner tables."""
 
+import os
 import pandas as pd
 
 import data_acquisition
@@ -46,6 +47,14 @@ def create_state_data():
 
     state_data = state_data_full[["FIPS", "ABBR", "STATE", "POP20"]]
 
+    directory = config_parsing.state_data_directory()
+    try:
+        os.makedirs(directory)
+    except OSError:
+        pass
+    else:
+        print(f"Created directory: {directory}")
+
     state_data.to_csv(config_parsing.state_data_location(), index=False)
 
 
@@ -79,5 +88,13 @@ def create_country_data():
         "REGION": ["US", "US_DC", "US_DC_PR"],
         "POP20" : [us_total, us_dc_total, us_dc_pr_total]
     })
+
+    directory = config_parsing.country_data_directory()
+    try:
+        os.makedirs(directory)
+    except OSError:
+        pass
+    else:
+        print(f"Created directory: {directory}")
 
     country_data.to_csv(config_parsing.country_data_location(), index=False)
