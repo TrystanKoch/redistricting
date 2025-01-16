@@ -71,9 +71,9 @@ def ensure_state_boundaries(redownload=False, config=None):
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(
-        config_parsing.state_boundary_directory(config),
-        config_parsing.state_boundary_filename(config),
-        config_parsing.state_boundary_url(config),
+        config_parsing.state_boundaries_directory(config),
+        config_parsing.state_boundaries_filename(config),
+        config_parsing.state_boundaries_url(config),
         redownload=redownload
     )
 
