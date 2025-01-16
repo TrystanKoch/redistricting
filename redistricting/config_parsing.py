@@ -2,6 +2,7 @@
 
 import os
 import tomllib
+import urllib.parse
 
 
 CONFIG = "config.toml"
@@ -78,7 +79,7 @@ def state_boundary_url(config=None):
         directory_year = config["census_urls"]["state_boundaries"]["directory_year"]
     )
     filename = state_boundary_filename()
-    url = f"{url_directory}/{filename}"
+    url = urllib.parse.urljoin(url_directory,filename)
     return url
 
 
@@ -125,7 +126,7 @@ def state_population_url(config=None):
         census_year = config["census_urls"]["census_year"]
     )
     filename = state_population_filename()
-    url = f"{url_directory}/{filename}"
+    url = urllib.parse.urljoin(url_directory,filename)
     return url
 
 
@@ -181,7 +182,7 @@ def fips_identifiers_url(config=None):
     config = ensure_config(config)
     url_directory = config["census_urls"]["FIPS_identifiers"]["directory"]
     filename = fips_identifiers_filename()
-    url = f"{url_directory}/{filename}"
+    url = urllib.parse.urljoin(url_directory,filename)
     return url
 
 
@@ -200,7 +201,7 @@ def fips_identifiers_location(config=None):
     return location
 
 
-def census_block_directory(config=None):
+def census_blocks_directory(config=None):
     """
     Return directory for census block files.
 
@@ -215,10 +216,12 @@ def census_block_directory(config=None):
     return directory
 
 
-def census_block_filename(fips_id, config=None):
+def census_blocks_filename(fips_id, config=None):
     """
     Return filename for census block file of state with given id.
     
+    :param fips_id: FIPS id of the state whose block is requested
+    :type fips_id: str or int
     :param config: Optional configuration dictionary.
     :type config: Optional[dict]
     """
@@ -233,10 +236,12 @@ def census_block_filename(fips_id, config=None):
     return filename
 
 
-def census_block_url(fips_id, config=None):
+def census_blocks_url(fips_id, config=None):
     """
     Return url for census block file of state with given id.
 
+    :param fips_id: FIPS id of the state whose block is requested
+    :type fips_id: str or int
     :param config: Optional configuration dictionary.
     :type config: Optional[dict]
     """
@@ -247,9 +252,25 @@ def census_block_url(fips_id, config=None):
         directory_year = census_block_config["directory_year"],
         census_year_short = config["census_urls"]["census_year_short"],
     )
-    filename = census_block_filename(fips_id)
-    url = f"{url_directory}/{filename}"
+    filename = census_blocks_filename(fips_id)
+    url = urllib.parse.urljoin(url_directory,filename)
     return url
+
+
+def census_blocks_location(fips, config=None):
+    """
+    Return full relative filename for processed state population lookup table.
+    
+
+    :param config: Optional configuration dictionary.
+    :type config: Optional[dict]
+    """
+    config = ensure_config(config)
+    location = os.path.join(
+        census_blocks_directory(config),
+        census_blocks_filename(fips, config)
+    )
+    return location
 
 
 def state_data_directory(config=None):

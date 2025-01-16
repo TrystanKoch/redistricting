@@ -108,9 +108,9 @@ def ensure_state_census_blocks(fips_id, redownload=False, config=None):
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(
-        config_parsing.census_block_directory(config),
-        config_parsing.census_block_filename(fips_id, config),
-        config_parsing.census_block_url(fips_id, config),
+        config_parsing.census_blocks_directory(config),
+        config_parsing.census_blocks_filename(fips_id, config),
+        config_parsing.census_blocks_url(fips_id, config),
         redownload=redownload
     )
 
