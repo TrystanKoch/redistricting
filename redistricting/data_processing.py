@@ -3,8 +3,8 @@
 import os
 import pandas as pd
 
-import data_acquisition
-import config_parsing
+from . import data_acquisition
+from . import config_parsing
 
 
 def create_state_data():

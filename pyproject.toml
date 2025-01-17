@@ -5,31 +5,34 @@ authors = [{ name = "Trystan Koch", email = "Trystan.Koch@gmail.com" }]
 maintainers = [{ name = "Trystan Koch", email = "Trystan.Koch@gmail.com" }]
 description = "Political redistricting based on simple, unbiased algorithms."
 keywords = [
-    "politics",
-    "apportionment",
-    "geography",
-    "census",
-    "redistricting",
-    "districting",
-    "splitline",
-    "voting",
-    "GIS",
+  "politics",
+  "apportionment",
+  "geography",
+  "census",
+  "redistricting",
+  "districting",
+  "splitline",
+  "voting",
+  "GIS",
 ]
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["pandas", "geopandas", "pyproj", "numpy"]
+dependencies = ["pandas", "geopandas", "pyproj", "numpy", "openpyxl"]
 classifiers = [
-    "Development Status :: 1 - Planning",
-    "Intended Audience :: End Users/Desktop",
-    "Intended Audience :: Legal Industry",
-    "Intended Audience :: Other Audience",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-    "Natural Language :: English",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
+  "Development Status :: 1 - Planning",
+  "Intended Audience :: End Users/Desktop",
+  "Intended Audience :: Legal Industry",
+  "Intended Audience :: Other Audience",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
 ]
 
-[project.scripts]
-redistrict-splitline = ""
-redistrict-leastquares = ""
-redistrict-circle-splitline = ""
+  [project.scripts]
+  #redistrict-splitline = ""
+  #redistrict-leastquares = ""
+  #redistrict-circle-splitline = ""
+
+[tool.setuptools]
+py-modules = ["redistricting"]

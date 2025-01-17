@@ -2,8 +2,8 @@
 
 import geopandas as gpd
 
-import config_parsing
-import data_acquisition
+from . import config_parsing
+from . import data_acquisition
 
 
 def load_state_census_blocks(fips):

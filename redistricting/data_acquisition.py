@@ -3,7 +3,7 @@
 import urllib
 import os.path
 
-import config_parsing
+from . import config_parsing
 
 CONFIG = "config.toml"
 
