@@ -28,7 +28,13 @@ import redistricting.data_acquisition
 > The U.S. Census updates the location and naming of their files occasionally. The filename and url templates in ```config.toml``` are intended to make dealing with these updates less painful.
 
 #### Example
-Try downloading the census data for 
+Try downloading the census data for Delaware (~12 MB): 
+```python
+import redistricting.data_acquisition
+
+delaware_fips = 10
+redistricting.data_acquisiton.ensure_state_census_blocks(delaware_fips)
+```
 
 
 ### - [x] Loading census blocks to geopandas
