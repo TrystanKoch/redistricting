@@ -1,7 +1,7 @@
 # Redistricting
 Political redistricting based on simple algorithms.
 
-> [! Note]  
+> [!Note]  
 > This project is in active initial development. This means,
 > - It lacks key features,
 > - Existing features may change rapidly, and
@@ -24,7 +24,7 @@ This project attempts to maintain a data pipeline that is easily traceable to th
 import redistricting.data_acquisition
 ```
 
-> [! Info]  
+> [!Info]  
 > The U.S. Census updates the location and naming of their files occasionally. The filename and url templates in ```config.toml``` are intended to make dealing with these updates less painful.
 
 #### Example
@@ -40,7 +40,7 @@ import redistricting.cl_argument_parsing
 import redistricting.data_loading
 ```
 
-> [! Info]  
+> [!Info]  
 > ```cl_argument_parsing.py``` is intended in the future to deal with all command line arguments of scripts. At the moment, it just contains a part of the FIPS lookup process.
 
 ### - [x] Huntington-Hill Apportionment
