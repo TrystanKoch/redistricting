@@ -61,3 +61,30 @@ def state_boundary(state_shape):
     :rtype: geopandas.geodataframe.GeoDataFrame
     """
     return state_shape.geometry.boundary
+
+
+def apportionment_drop_pr(states):
+    """
+    Drops Puerto Rico from a list of 'state' populations.
+
+    :param states: Cleaned state populations table.
+    :type states: pandas.core.frame.DataFrame
+    """
+    return (
+        states
+        [states["ABBR"] != "PR"]
+    )
+
+
+def apportionment_drop_pr_dc(states):
+    """
+    Drops Puerto Rico and the District of Columbia from a list of 'state' populations.
+
+    :param states: Cleaned state populations table.
+    :type states: pandas.core.frame.DataFrame
+    """
+    return (
+        states
+        [states["ABBR"] != "PR"]
+        [states["ABBR"] != "DC"]
+    )
