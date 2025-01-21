@@ -32,5 +32,11 @@ directory = "data"
   [saved_data.cleaned_tables]
   directory = "prepared"
 
+    [saved_data.cleaned_tables.state_data]
+    filename = "state_data.csv"
+
+    [saved_data.cleaned_tables.country_data]
+    filename = "country_data.csv"
+
   [saved_data.state_census_blocks]
   directory = "state_census_blocks"
