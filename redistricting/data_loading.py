@@ -1,9 +1,12 @@
 """Modules for loading a state's data from saved files."""
+import os
 
+import pandas as pd
 import geopandas as gpd
 
 from . import config_parsing
 from . import data_acquisition
+from . import data_processing
 
 
 def load_state_census_blocks(fips):
@@ -55,3 +58,23 @@ def load_state_shape_unchecked(fips):
     """
     state_shapes_raw = gpd.read_file(config_parsing.state_shapes_location())
     return state_shapes_raw[state_shapes_raw["STATEFP"] == str(fips)]
+
+
+def load_state_data():
+    """
+    Load state data table.
+    """
+    state_data_location = config_parsing.state_data_location()
+    if not os.path.isfile(state_data_location):
+        data_processing.create_state_data()
+    return pd.read_csv(state_data_location)
+
+
+def load_country_data():
+    """
+    Load the country data table.
+    """
+    country_data_location = config_parsing.country_data_location()
+    if not os.path.isfile(country_data_location):
+        data_processing.create_country_data()
+    return pd.read_csv(country_data_location)
