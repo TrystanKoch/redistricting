@@ -7,11 +7,11 @@ census_year_short = "20"
   filename_template = "tl_{directory_year}_{state_fips}_tabblock{census_year_short}.zip"
   directory_year = "2024"
 
-  [census_urls.state_boundaries]
+  [census_urls.state_shapes]
   directory_template = "https://www2.census.gov/geo/tiger/GENZ{directory_year}/shp/"
-  filename_template = "cb_{directory_year}_us_state_{boundary_resolution}.zip"
+  filename_template = "cb_{directory_year}_us_state_{shape_resolution}.zip"
   directory_year = "2018"
-  boundary_resolution = "500k"
+  shape_resolution = "500k"
 
   [census_urls.FIPS_identifiers]
   directory = "https://www2.census.gov/geo/docs/reference/"

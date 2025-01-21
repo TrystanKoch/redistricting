@@ -35,9 +35,9 @@ def downloads_directory(config=None):
     return directory
 
 
-def state_boundaries_directory(config=None):
+def state_shapes_directory(config=None):
     """
-    Return directory for the census state boundary file.
+    Return directory for the census state shape file.
     
     :param config: Optional configuration dictionary.
     :type config: Optional[dict]
@@ -50,40 +50,40 @@ def state_boundaries_directory(config=None):
     return directory
 
 
-def state_boundaries_filename(config=None):
+def state_shapes_filename(config=None):
     """
-    Return filename the census state boundary file.
+    Return filename the census state shape file.
 
     :param config: Optional configuration dictionary.
     :type config: Optional[dict]
     """
     config = ensure_config(config)
-    filename_template = config["census_urls"]["state_boundaries"]["filename_template"]
+    filename_template = config["census_urls"]["state_shapes"]["filename_template"]
     filename = filename_template.format(
-        directory_year=config["census_urls"]["state_boundaries"]["directory_year"],
-        boundary_resolution=config["census_urls"]["state_boundaries"]["boundary_resolution"],
+        directory_year=config["census_urls"]["state_shapes"]["directory_year"],
+        shape_resolution=config["census_urls"]["state_shapes"]["shape_resolution"],
     )
     return filename
 
 
-def state_boundaries_url(config=None):
+def state_shapes_url(config=None):
     """
-    Return census URL for the census state boundary file.
+    Return census URL for the census state shape file.
 
     :param config: Optional configuration dictionary.
     :type config: Optional[dict]
     """
     config = ensure_config(config)
-    url_directory_template = config["census_urls"]["state_boundaries"]["directory_template"]
+    url_directory_template = config["census_urls"]["state_shapes"]["directory_template"]
     url_directory = url_directory_template.format(
-        directory_year = config["census_urls"]["state_boundaries"]["directory_year"]
+        directory_year = config["census_urls"]["state_shapes"]["directory_year"]
     )
-    filename = state_boundaries_filename()
+    filename = state_shapes_filename()
     url = urllib.parse.urljoin(url_directory,filename)
     return url
 
 
-def state_boundaries_location(config=None):
+def state_shapes_location(config=None):
     """
     Return full relative filename for census state population file.
     
@@ -92,8 +92,8 @@ def state_boundaries_location(config=None):
     """
     config = ensure_config(config)
     location = os.path.join(
-        state_boundaries_directory(config),
-        state_boundaries_filename(config)
+        state_shapes_directory(config),
+        state_shapes_filename(config)
     )
     return location
 

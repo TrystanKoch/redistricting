@@ -60,9 +60,9 @@ def ensure_census_file(directory, filename, url, redownload=False, interactive=F
     return True
 
 
-def ensure_state_boundaries(redownload=False, config=None):
+def ensure_state_shapes(redownload=False, config=None):
     """
-    Ensures we have the state boundary file from the census.
+    Ensures we have the state shape file from the census.
 
     :param redownload: Whether we want to redownload the file if it already exists.
     :type redownload: bool
@@ -71,9 +71,9 @@ def ensure_state_boundaries(redownload=False, config=None):
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(
-        config_parsing.state_boundaries_directory(config),
-        config_parsing.state_boundaries_filename(config),
-        config_parsing.state_boundaries_url(config),
+        config_parsing.state_shapes_directory(config),
+        config_parsing.state_shapes_filename(config),
+        config_parsing.state_shapes_url(config),
         redownload=redownload
     )
 

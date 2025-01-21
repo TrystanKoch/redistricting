@@ -31,27 +31,27 @@ def load_state_census_blocks_unchecked(fips):
     return gpd.read_file(config_parsing.census_blocks_location(fips))
 
 
-def load_state_boundary(fips):
+def load_state_shape(fips):
     """
-    Load a state boundary from the state boundaries file.
+    Load a state shape from the state shapes file.
 
     :param fips: The FIPS identifier for the state.
     :type fips: int or str
-    :return: A state's boundary.
+    :return: A state's shape.
     :rtype: geopandas.DataFrame
     """
-    data_acquisition.ensure_state_boundaries()
-    return load_state_boundary_unchecked(fips)
+    data_acquisition.ensure_state_shapes()
+    return load_state_shape_unchecked(fips)
 
 
-def load_state_boundary_unchecked(fips):
+def load_state_shape_unchecked(fips):
     """
-    Load a state boundary from the state boundaries file. Does not check for file.
+    Load a state shape from the state shapes file. Does not check for file.
 
     :param fips: The FIPS identifier for the state.
     :type fips: int or str
-    :return: A state's boundary.
+    :return: A state's shape.
     :rtype: geopandas.DataFrame
     """
-    state_boundaries_raw = gpd.read_file(config_parsing.state_boundaries_location())
-    return state_boundaries_raw[state_boundaries_raw["STATEFP"] == str(fips)]
+    state_shapes_raw = gpd.read_file(config_parsing.state_shapes_location())
+    return state_shapes_raw[state_shapes_raw["STATEFP"] == str(fips)]
