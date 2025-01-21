@@ -6,7 +6,7 @@ from . import config_parsing
 from . import data_acquisition
 from . import data_loading
 from . import data_processing
-from . import splitline
+from .splitline import splitline
 
 __all__ = [
     apportionment,
