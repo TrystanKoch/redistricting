@@ -1,9 +1,58 @@
 """Contains functions used in apportioning representatives."""
 
+from enum import StrEnum
 from math import sqrt
+
+from . import data_loading
+from . import data_cleaning
 
 POP_COL = "POP20"
 REPS_COL = "reps"
+
+class ApportionmentMethod(StrEnum):
+    """Possible Apportionment methods"""
+    HHILL = "huntington_hill"
+
+
+def apportion_representatives(
+        min_total_reps=435,
+        min_state_reps=1,
+        include_dc=False,
+        include_pr=False,
+        method=ApportionmentMethod.HHILL
+    ):
+    """
+    Apportion US Representatives to the states.
+
+    :param min_total_reps: The number of state representatives to apportion.
+    :type min_total_reps: int
+    :param min_state_reps: Optional minimum number of representatives allowed per state.
+    :type min_state_reps: int
+    :param include_dc: Whether to apportion representatives to the District of Columbia.
+    :type include_dc: bool
+    :param include_pr: Whether to apportion representatives to Puerto Rico.
+    :type include_pr: bool
+    :param method: Representative apportionment method.
+    :type method: ApportionmentMethod
+    """
+
+    states = data_loading.load_state_data()
+
+    if not include_dc:
+        states = data_cleaning.apportionment_drop_dc(states)
+
+    if not include_pr:
+        states = data_cleaning.apportionment_drop_pr(states)
+
+    if method == ApportionmentMethod.HHILL:
+        return huntington_hill(states, min_total_reps, min_state_reps)
+    else:
+        # No options for now. Unlikely to be others, as Huntington-Hill method
+        # is well established and optimal. Redundancy here for potential
+        # changes.
+        return huntington_hill(states, min_total_reps, min_state_reps)
+
+
 
 def huntington_hill(population_df, min_total_reps, min_state_reps=1):
     """

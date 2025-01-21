@@ -76,7 +76,7 @@ def apportionment_drop_pr(states):
     )
 
 
-def apportionment_drop_pr_dc(states):
+def apportionment_drop_dc(states):
     """
     Drops Puerto Rico and the District of Columbia from a list of 'state' populations.
 
@@ -85,5 +85,5 @@ def apportionment_drop_pr_dc(states):
     """
     return (
         states
-        [~states["ABBR"].isin(["PR", "DC"])]
+        [~states["ABBR"].isin(["DC"])]
     )
