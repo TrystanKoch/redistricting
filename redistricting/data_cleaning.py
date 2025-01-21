@@ -49,3 +49,15 @@ def census_block_centroids(census_blocks, gnomonic_crs):
         # processing. So we need to convert back.
         .to_crs("EPSG:4326")
     )
+
+
+def state_boundary(state_shape):
+    """
+    Finds the boundary of a given state from its geographical shape.
+    
+    :param state_shape: Shape information for a state.
+    :type state_shape: geopandas.geodataframe.GeoDataFrame
+    :return: Boundary information for a state.
+    :rtype: geopandas.geodataframe.GeoDataFrame
+    """
+    return state_shape.geometry.boundary
