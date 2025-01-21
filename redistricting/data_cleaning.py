@@ -72,7 +72,7 @@ def apportionment_drop_pr(states):
     """
     return (
         states
-        [states["ABBR"] != "PR"]
+        [~states["ABBR"].isin(["PR"])]
     )
 
 
@@ -85,6 +85,5 @@ def apportionment_drop_pr_dc(states):
     """
     return (
         states
-        [states["ABBR"] != "PR"]
-        [states["ABBR"] != "DC"]
+        [~states["ABBR"].isin(["PR", "DC"])]
     )
