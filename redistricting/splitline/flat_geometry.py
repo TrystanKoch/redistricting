@@ -91,3 +91,17 @@ def position_dot_products(df_, total_steps):
     # this calculation once instead of calculating the direction dot products
     # in every recursive step.
     return df_
+
+
+def sort_by_angle_step(df_, n):
+    """
+    Sorts a dataframe by the column representing a particular angular step's dot products.
+
+    :param df_: Dataframe of block centroids with appended dot product columns
+    :type df_: pandas.core.frame.DataFrame
+    :param n: The column or integer for a column to sort the dataframe by.
+    :type n: int or str
+    :returns: Sorted DataFrame
+    :rtype: pandas.core.frame.DataFrame
+    """
+    return df_.sort_values([str(n)])
