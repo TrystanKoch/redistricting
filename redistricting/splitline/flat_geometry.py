@@ -81,9 +81,8 @@ def position_dot_products(df_, total_steps):
     ----------
     df_: pandas.core.frame.DataFrame
         A dataframe containing x and y position columns
-    :type df_: pandas.core.frame.DataFrame
     total_steps: int
-        The number of angles we wish to compute during a full revolution.
+        The number of angles we wish to compute during a full revolution
 
     
     Returns
