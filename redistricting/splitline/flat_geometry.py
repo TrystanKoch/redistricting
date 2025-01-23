@@ -56,7 +56,7 @@ def line_tangent(theta):
     Parameters
     ----------
     theta : float
-        The angle of a line with respect to the horizontal
+        The angle in radians of a line with respect to the horizontal
     
     Returns
     -------
@@ -84,7 +84,6 @@ def position_dot_products(df_, total_steps):
     total_steps: int
         The number of angles we wish to compute during a full revolution
 
-    
     Returns
     -------
     pandas.core.frame.DataFrame
