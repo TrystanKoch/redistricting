@@ -8,9 +8,11 @@ from . import config_parsing
 
 
 def create_state_data():
-    """
-    Process the census population files to a single lookup file for state
-    populations.
+    """Processs census files to a single state population lookup table.
+
+    Notes
+    -----
+    Creates a file.
     """
     data_acquisition.ensure_state_population_table()
     data_acquisition.ensure_fips_identifiers()
@@ -70,9 +72,11 @@ def create_state_data():
 
 
 def create_country_data():
-    """
-    Process the census population files to a single lookup file for US 
-    Population.
+    """Processs census files to a single country-wide population lookup table.
+    
+    Notes
+    ----
+    Creates a file.
     """
     data_acquisition.ensure_state_population_table()
 

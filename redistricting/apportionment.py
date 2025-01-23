@@ -21,21 +21,20 @@ def apportion_representatives(
         include_pr=False,
         method=ApportionmentMethod.HHILL
     ):
-    """
-    Apportion US Representatives to the states.
+    """Apportion US Representatives to the states.
 
-    :param min_total_reps: The number of state representatives to apportion.
-    :type min_total_reps: int
-    :param min_state_reps: Optional minimum number of representatives allowed 
-    per state.
-    :type min_state_reps: int
-    :param include_dc: Whether to apportion representatives to the District of 
-    Columbia.
-    :type include_dc: bool
-    :param include_pr: Whether to apportion representatives to Puerto Rico.
-    :type include_pr: bool
-    :param method: Representative apportionment method.
-    :type method: ApportionmentMethod
+    Parameters
+    ----------
+    min_total_reps: int
+        The number of state representatives to apportion
+    min_state_reps: int
+        Minimum number of representatives allowed per state
+    include_dc: bool
+        Whether to apportion representatives to the District of Columbia
+    include_pr: bool
+        Whether to apportion representatives to Puerto Rico
+    method : ApportionmentMethod
+        Representative apportionment method
     """
 
     states = data_loading.load_state_data()
@@ -57,20 +56,18 @@ def apportion_representatives(
 
 
 def huntington_hill(population_df, min_total_reps, min_state_reps=1):
-    """
-    Apportion representatives according to the Huntington-Hill apportionment 
-    method.
+    """Apportion representatives by Huntington-Hill method.
 
-    :param population_df: A dataframe of states (and/or territories) with 
-    populations
-    :type population_df: pandas.core.frame.DataFrame
-    :param min_total_reps: Least number of representatives to apportion.
-    :type min_total_reps: int
-    :param min_state_reps: Least allowable number of representatives in one 
-    state.
-    :type min_state_reps: int
-    
     Note that there will always be at least one representative per state.
+
+    Parameters
+    ----------
+    population_df : pandas.core.frame.DataFrame
+        A dataframe of states (and/or territories) with populations
+    min_total_reps : int
+        Least number of representatives to apportion
+    min_state_reps : int
+        Least allowable number of representatives in one state
     """
     tmp_df = population_df.copy()
     tmp_df[REPS_COL] = 1

@@ -8,13 +8,14 @@ from . import config_parsing
 CONFIG = "config.toml"
 
 def download_file(url, destination):
-    """
-    Downloads a web file's data into a local file.
+    """Downloads a web file's data into a local file.
 
-    :param url: URL of the desired file.
-    :type url: str
-    :param dest: Filename to save project to.
-    :type dest: str  
+    Parameters
+    ----------
+    url : str
+        URL of the desired file
+    dest : str
+        Filename to save project to
     """
     with (
         open(destination, "wb+") as local_file,
@@ -30,22 +31,27 @@ def ensure_census_file(
         redownload=False,
         interactive=False
     ):
-    """
-    Check whether a file exists in a given directory, or else download it.
+    """Ensures that a file exists.
 
-    :param directory: The directory we want a given file to be in.
-    :type directory: str
-    :param filename: The census filename for the given file.
-    :type filename: str
-    :param url: The census url for the given file.
-    :type url: str
-    :param redownload: Whether we want to redownload the file if it already 
-    exists.
-    :type redownload: bool
-    :param interactive: Whether to ask the user to download a missing file.
-    :type interactive: bool
-    :return: Whether the specified file exists.
-    :rtype: bool
+    Checks whether a file exists in a given directory. If not, downloads it.
+
+    Parameters
+    ----------
+    directory : str
+        The directory we want a given file to be in
+    filename : str
+        The census filename for the given file
+    url : str
+        The census url for the given file
+    redownload : bool
+        Whether we want to redownload the file if it already exists
+    interactive : bool
+        Whether to ask the user to download a missing file
+
+    Returns
+    -------
+    bool
+        Whether the specified file exists now
     """
     # Check if directory exists already. If not, make it.
     try:
@@ -70,14 +76,14 @@ def ensure_census_file(
 
 
 def ensure_state_shapes(redownload=False, config=None):
-    """
-    Ensures we have the state shape file from the census.
+    """Ensures we have the state shape file from the census.
 
-    :param redownload: Whether we want to redownload the file if it already 
-    exists.
-    :type redownload: bool
-    :param config: Optional configuration dictionary.
-    :type config: Optional[dict]
+    Parameters
+    ----------
+    redownload : bool
+        Whether we want to redownload the file if it already exists
+    config : Optional[dict]
+        Optional configuration dictionary
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(
@@ -88,14 +94,14 @@ def ensure_state_shapes(redownload=False, config=None):
     )
 
 def ensure_fips_identifiers(redownload=False, config=None):
-    """
-    Ensures we have the fips identifier table from the census.
+    """Ensures we have the fips identifier table from the census.
 
-    :param redownload: Whether we want to redownload the file if it already
-    exists.
-    :type redownload: bool
-    :param config: Optional configuration dictionary.
-    :type config: Optional[dict]
+    Parameters
+    ----------
+    redownload : bool
+        Whether we want to redownload the file if it already exists
+    config : Optional[dict]
+        Optional configuration dictionary
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(
@@ -107,16 +113,16 @@ def ensure_fips_identifiers(redownload=False, config=None):
 
 
 def ensure_state_census_blocks(fips_id, redownload=False, config=None):
-    """
-    Ensures we have the census block file for the state with the given fips_id.
+    """Ensures we have the census block file for a state.
 
-    :param fips_id: The two digit FIPS identifier for a particular state.
-    :type fips_id: int or str
-    :param redownload: Whether we want to redownload the file if it already
-    exists.
-    :type redownload: bool
-    :param config: Optional configuration dictionary.
-    :type config: Optional[dict]
+    Parameters
+    ----------
+    fips_id : int or str
+        The two digit FIPS identifier for a particular state
+    redownload : bool
+        Whether we want to redownload the file if it already exists
+    config : Optional[dict]
+        Optional configuration dictionary
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(
@@ -127,14 +133,14 @@ def ensure_state_census_blocks(fips_id, redownload=False, config=None):
     )
 
 def ensure_state_population_table(redownload=False, config=False):
-    """
-    Ensures we have the state population table from the census.
+    """Ensures we have the state population table from the census.
 
-    :param redownload: Whether we want to redownload the file if it already
-    exists.
-    :type redownload: bool
-    :param config: Optional configuration dictionary.
-    :type config: Optional[dict]
+    Parameters
+    ----------
+    redownload : bool
+        Whether we want to redownload the file if it already exists
+    config : Optional[dict]
+        Optional configuration dictionary
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(

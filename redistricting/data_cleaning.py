@@ -3,15 +3,26 @@
 import geopandas as gpd
 
 def census_block_centroids(census_blocks, gnomonic_crs):
-    """
-    Turn the Census' very large dataframe into a more usable dataframe.
+    """Turns the Census' very large dataframe into a more usable dataframe.
+
+    Specifically, all of our processing will only require a central internal
+    point of each block, so we change the geometry of our census block data
+    to only include this information. We keep the GEOID information for
+    the blocks so that we can join our districts to the original blocks
+    later.
     
-    :param census_blocks: A dataframe of census blocks for a given state.
-    :type census_blocks: geopandas.geodataframe.GeoDataFrame
-    :param gnomonic_crs: A gnomonic CRS centered on that state.
+    Parameters
+    ----------
+    census_blocks : geopandas.geodataframe.GeoDataFrame
+        A dataframe of census blocks for a given state
+    gnomonic_crs : pyproj.crs.crs.CRS
+        A gnomonic CRS centered on that state.
     :type census_blocks: pyproj.crs.crs.CRS
-    :returns: A dataframe of census_block centroids with useful information.
-    :rtype: geopandas.geodataframe.GeoDataFrame
+
+    Returns
+    -------
+    geopandas.geodataframe.GeoDataFrame
+        Census_block centroids with GEOID, population, and gnomonic locations
     """
     return (
         # The Census already calculates an internal central point
@@ -52,23 +63,31 @@ def census_block_centroids(census_blocks, gnomonic_crs):
 
 
 def state_boundary(state_shape):
-    """
-    Finds the boundary of a given state from its geographical shape.
+    """Finds the boundary of a given state from its geographical shape.
+
+    Parameters
+    ----------
+    state_shape : geopandas.geodataframe.GeoDataFrame
+        Shape information for a state
     
-    :param state_shape: Shape information for a state.
-    :type state_shape: geopandas.geodataframe.GeoDataFrame
-    :return: Boundary information for a state.
-    :rtype: geopandas.geodataframe.GeoDataFrame
+    Returns
+    -------
+    geopandas.geodataframe.GeoDataFrame
+        Boundary information for a state
     """
     return state_shape.geometry.boundary
 
 
 def apportionment_drop_pr(states):
-    """
-    Drops Puerto Rico from a list of 'state' populations.
+    """Drops Puerto Rico from a list of 'state' populations.
 
-    :param states: Cleaned state populations table.
-    :type states: pandas.core.frame.DataFrame
+    Parameters
+    ----------
+    states : pandas.core.frame.DataFrame
+        Cleaned state populations table
+    
+    pandas.core.frame.DataFrame
+        Cleaned state populations table without Puerto Rico
     """
     return (
         states
@@ -77,12 +96,17 @@ def apportionment_drop_pr(states):
 
 
 def apportionment_drop_dc(states):
-    """
-    Drops Puerto Rico and the District of Columbia from a list of 'state'
-    populations.
+    """ Drops DC from a list of 'state' populations.
 
-    :param states: Cleaned state populations table.
-    :type states: pandas.core.frame.DataFrame
+    Parameters
+    ----------
+    states : pandas.core.frame.DataFrame
+        Cleaned state populations table
+
+    Returns
+    -------
+    pandas.core.frame.DataFrame
+        Cleaned state populations table without DC
     """
     return (
         states

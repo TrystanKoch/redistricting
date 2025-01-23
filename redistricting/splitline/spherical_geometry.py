@@ -5,17 +5,22 @@ import warnings
 import pyproj
 
 def centered_gnomonic_crs(shape):
-    """
+    """Create gnomonic coordinate reference system around a point.
+
     Creates a gnomonic CRS centered at a geographic shape's approximate 
     centroid.
 
     A "gnomonic" projection is one where all lines represent great circles.
 
-    :param shape: A geographic shape defined through latitude and longitude in 
-    NAD83.
-    :type shape: geopandas.geodataframe.GeoDataFrame
-    :return: A gnomonic CRS centered on the geographic shape.
-    :rtype: pyproj.crs.crs.CRS
+    Parameters
+    ----------
+    shape : geopandas.geodataframe.GeoDataFrame
+        A geographic shape defined through latitude and longitude in NAD83
+    
+    Returns
+    -------
+    pyproj.crs.crs.CRS
+        A gnomonic CRS centered on the geographic shape
     """
 
     with warnings.catch_warnings():

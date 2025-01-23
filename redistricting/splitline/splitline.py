@@ -1,18 +1,23 @@
 """For splitting regions into districts recursively."""
 
 def horizontal_splitter(region_block_centroids, max_small_district_population):
-    """
+    """Splits a region in two, by population, horizontally.
+
     Splits a region into two, horizontally. The smaller region will have a 
     population that is as large as possible while still being less than a 
     given population.
 
-    :param region_block_centroids: A dataframe that corresponds to a region.
-    :type region_block_centroids: pandas.core.frame.DataFrame
-    :param max_small_district_population: A population maximum for the smaller 
-    of the resulting districts
-    :type max_small_district_population: int
-    :returns:
-    :rtype:
+    Parameters
+    ----------
+    region_block_centroids : pandas.core.frame.DataFrame
+        A dataframe that corresponds to a region
+    max_small_district_population : int
+        A population maximum for the smaller of the resulting districts
+
+    Returns
+    -------
+    pandas.core.frame.DataFrame
+        A mask that is true for all blocks part of the smaller region
     """
     # This naive test function only splits the state in horizontal lines.
     # Because of this, the angular step is always 0, corresponding to
@@ -41,20 +46,21 @@ def horizontal_splitter(region_block_centroids, max_small_district_population):
 
 
 def split_district(cb_blocks, region_mask, num_districts, district_count):
-    """
+    """Recursively split a region into districts of almost equal population.
+
     Recursively split a region into districts with populations in proportion 
     to an even split of districts.
 
-    :param cb_blocks: A (mutating!) dataframe representing census blocks.
-    :type cb_blocks: geopandas.geodataframe.GeoDataFrame
-    :param region_mask: A mask over the census blocks, indicating the current 
-    region to split.
-    :type region_mask: pandas.core.frame.DataFrame
-    :param num_districts: The total number of districts we want to split the 
-    state into.
-    :type num_districts: int
-    :param district_count: The number of districts we have created so far.
-    :type num_districts: int
+    Parameters
+    ----------
+    cb_blocks : geopandas.geodataframe.GeoDataFrame
+        A (mutating!) dataframe representing census blocks
+    region_mask : pandas.core.frame.DataFrame
+        A mask over the census blocks, indicating the current region to split
+    num_districts : int
+        The total number of districts we want to split the state into
+    district_count : int
+        The number of districts we have created so far
     """
 
     # Find the total population of the district
@@ -65,7 +71,10 @@ def split_district(cb_blocks, region_mask, num_districts, district_count):
     if num_districts == 1:
         district_count += 1
         cb_blocks.loc[region_mask, "district"] = district_count
-        print(f"Created district {district_count}, population {total_population}.")
+        print(
+            f"Created district {district_count},",
+            f"population {total_population}."
+        )
         return district_count
 
     # At this point, we know that we have to split our current region at least
@@ -108,13 +117,16 @@ def split_district(cb_blocks, region_mask, num_districts, district_count):
 
 
 def split_state(block_centroids, num_districts):
-    """
+    """Splits census blocks into districts of almost equal population.
+
     Recursively splits a region into districts of equal population in place.
 
-    :param block_centroids: A (mutating!) set of census blocks.
-    :type block_centroids: geopandas.geoframe.GeoDataFrame
-    :param num_districts: Total number of districts to divide the region into.
-    :type num_districts: int
+    Parameters
+    ----------
+    block_centroids:geopandas.geoframe.GeoDataFrame
+        A (mutating!) set of census blocks
+    num_districts: int
+        Total number of districts to divide the region into
     """
     district_count = 0
     region_mask = block_centroids["district"].notna()
