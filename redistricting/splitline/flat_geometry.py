@@ -5,12 +5,13 @@ import pandas as pd
 
 def theta_from_steps(step, total_steps):
     """
-    Gives the angle in radians swept out by "step" steps if a full revolution has been split 
-    into "total_steps" steps.
+    Gives the angle in radians swept out by "step" steps if a full revolution h
+    as been split into "total_steps" steps.
 
     :param step: The number of angluar steps we have taken.
     :type step: int
-    :param total_steps: The total number of angular steps we want to break a full turn into.
+    :param total_steps: The total number of angular steps we want to break a 
+    full turn into.
     :type total_steps: int
     :returns: The angle, in radians.
     :rtype: float
@@ -60,9 +61,11 @@ def position_dot_products(df_, total_steps):
 
     :param df_: A dataframe containing x and y position columns
     :type df_: pandas.core.frame.DataFrame
-    :param total_steps: The number of angles we wish to compute during a full revolution.
+    :param total_steps: The number of angles we wish to compute during a full 
+    revolution.
     :type total_steps: int
-    :returns: Original dataframe with "total_steps" additional columns of dot products.
+    :returns: Original dataframe with "total_steps" additional columns of dot 
+    products.
     :rtype: pandas.core.frame.DataFrame
     """
     # Create a smaller dataframe just from the relevent columns.
@@ -77,8 +80,8 @@ def position_dot_products(df_, total_steps):
         unit_normal = line_normal(theta_from_steps(step, total_steps))
         directed_distances.append(
             pd.DataFrame(
-                # Take the dot product of the z and y columns with the unit normal
-                # to the line at an angle to the horizontal.
+                # Take the dot product of the z and y columns with the unit 
+                # normal to the line at an angle to the horizontal.
                 df_xy.dot(unit_normal),
 
                 # Name each column after the integer step that is taken.
@@ -95,7 +98,8 @@ def position_dot_products(df_, total_steps):
 
 def sort_by_angle_step(df_, n):
     """
-    Sorts a dataframe by the column representing a particular angular step's dot products.
+    Sorts a dataframe by the column representing a particular angular step's 
+    dot products.
 
     :param df_: Dataframe of block centroids with appended dot product columns
     :type df_: pandas.core.frame.DataFrame

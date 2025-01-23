@@ -136,7 +136,9 @@ def state_population_url(config=None):
     :type config: Optional[dict]
     """
     config = ensure_config(config)
-    url_directory_template = config["census_urls"]["apportionment_population"]["directory_template"]
+    url_directory_template = config["census_urls"] \
+                                   ["apportionment_population"] \
+                                   ["directory_template"]
     url_directory = url_directory_template.format(
         census_year = config["census_urls"]["census_year"]
     )

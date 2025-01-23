@@ -23,7 +23,13 @@ def download_file(url, destination):
         local_file.write(web_file.read())
 
 
-def ensure_census_file(directory, filename, url, redownload=False, interactive=False):
+def ensure_census_file(
+        directory,
+        filename,
+        url,
+        redownload=False,
+        interactive=False
+    ):
     """
     Check whether a file exists in a given directory, or else download it.
 
@@ -33,7 +39,8 @@ def ensure_census_file(directory, filename, url, redownload=False, interactive=F
     :type filename: str
     :param url: The census url for the given file.
     :type url: str
-    :param redownload: Whether we want to redownload the file if it already exists.
+    :param redownload: Whether we want to redownload the file if it already 
+    exists.
     :type redownload: bool
     :param interactive: Whether to ask the user to download a missing file.
     :type interactive: bool
@@ -52,7 +59,9 @@ def ensure_census_file(directory, filename, url, redownload=False, interactive=F
     destination = os.path.join(directory, filename)
     if not os.path.isfile(destination) or redownload:
         if interactive and not redownload:
-            download_wanted = input(f"{destination} not found. Download it? [y/n]? ")
+            download_wanted = input(
+                f"{destination} not found. Download it? [y/n]? "
+            )
             if download_wanted not in ["y", "Y", "yes", "Yes", "YES"]:
                 return False
         print(f"Downloading {destination}.")
@@ -64,7 +73,8 @@ def ensure_state_shapes(redownload=False, config=None):
     """
     Ensures we have the state shape file from the census.
 
-    :param redownload: Whether we want to redownload the file if it already exists.
+    :param redownload: Whether we want to redownload the file if it already 
+    exists.
     :type redownload: bool
     :param config: Optional configuration dictionary.
     :type config: Optional[dict]
@@ -81,7 +91,8 @@ def ensure_fips_identifiers(redownload=False, config=None):
     """
     Ensures we have the fips identifier table from the census.
 
-    :param redownload: Whether we want to redownload the file if it already exists.
+    :param redownload: Whether we want to redownload the file if it already
+    exists.
     :type redownload: bool
     :param config: Optional configuration dictionary.
     :type config: Optional[dict]
@@ -101,7 +112,8 @@ def ensure_state_census_blocks(fips_id, redownload=False, config=None):
 
     :param fips_id: The two digit FIPS identifier for a particular state.
     :type fips_id: int or str
-    :param redownload: Whether we want to redownload the file if it already exists.
+    :param redownload: Whether we want to redownload the file if it already
+    exists.
     :type redownload: bool
     :param config: Optional configuration dictionary.
     :type config: Optional[dict]
@@ -118,7 +130,8 @@ def ensure_state_population_table(redownload=False, config=False):
     """
     Ensures we have the state population table from the census.
 
-    :param redownload: Whether we want to redownload the file if it already exists.
+    :param redownload: Whether we want to redownload the file if it already
+    exists.
     :type redownload: bool
     :param config: Optional configuration dictionary.
     :type config: Optional[dict]

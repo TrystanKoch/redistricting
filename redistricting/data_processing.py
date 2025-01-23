@@ -9,7 +9,8 @@ from . import config_parsing
 
 def create_state_data():
     """
-    Process the census population files to a single lookup file for state populations.
+    Process the census population files to a single lookup file for state
+    populations.
     """
     data_acquisition.ensure_state_population_table()
     data_acquisition.ensure_fips_identifiers()
@@ -24,8 +25,12 @@ def create_state_data():
     )
 
     pops = (pops_raw
-        .assign(POP20 = lambda df_: (df_["RESPOP20"] + df_["OVSPOP20"].fillna(0))
-                .astype("int64"))
+        .assign(
+            POP20 = lambda df_: (
+                df_["RESPOP20"] + df_["OVSPOP20"].fillna(0)
+            )
+            .astype("int64")
+        )
         .drop(["RESPOP20", "OVSPOP20"], axis=1)
     )
 
@@ -36,7 +41,13 @@ def create_state_data():
 
     fips = (fips_raw
         .drop("STATENS", axis=1)
-        .rename(columns={"STATE": "FIPS", "STATE_NAME":"STATE", "STUSAB":"ABBR"})
+        .rename(
+            columns={
+                "STATE": "FIPS",
+                "STATE_NAME":"STATE",
+                "STUSAB":"ABBR"
+            }
+        )
     )
 
     state_data_full = pd.merge(
@@ -60,7 +71,8 @@ def create_state_data():
 
 def create_country_data():
     """
-    Process the census population files to a single lookup file for US Population.
+    Process the census population files to a single lookup file for US 
+    Population.
     """
     data_acquisition.ensure_state_population_table()
 
@@ -73,16 +85,33 @@ def create_country_data():
         na_values ="X",
     )
 
-    pops = (pops_raw
-        .assign(POP20 = lambda df_: (df_["RESPOP20"] + df_["OVSPOP20"].fillna(0))
-                .astype("int64"))
+    pops = (
+        pops_raw
+        .assign(
+            POP20 = lambda df_: (
+                df_["RESPOP20"] + df_["OVSPOP20"].fillna(0)
+            )
+            .astype("int64")
+        )
         .drop(["RESPOP20", "OVSPOP20"], axis=1)
     )
 
-    us_total = pops.loc[pops["STATE"] == "U.S. Total"].iloc[0,1] \
-                - pops.loc[pops["STATE"] == "District of Columbia"].iloc[0,1]
-    us_dc_total = pops.loc[pops["STATE"] == "U.S. Total"].iloc[0,1]
-    us_dc_pr_total = pops.loc[pops["STATE"] == "U.S. Total and Puerto Rico"].iloc[0,1]
+    dc_total = (
+        pops
+        .loc[pops["STATE"] == "District of Columbia"]
+        .iloc[0,1]
+    )
+    us_dc_total = (
+        pops
+        .loc[pops["STATE"] == "U.S. Total"]
+        .iloc[0,1]
+    )
+    us_dc_pr_total = (
+        pops
+        .loc[pops["STATE"] == "U.S. Total and Puerto Rico"]
+        .iloc[0,1]
+    )
+    us_total = us_dc_total - dc_total
 
     country_data = pd.DataFrame({
         "REGION": ["US", "US_DC", "US_DC_PR"],

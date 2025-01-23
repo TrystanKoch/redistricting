@@ -26,9 +26,11 @@ def apportion_representatives(
 
     :param min_total_reps: The number of state representatives to apportion.
     :type min_total_reps: int
-    :param min_state_reps: Optional minimum number of representatives allowed per state.
+    :param min_state_reps: Optional minimum number of representatives allowed 
+    per state.
     :type min_state_reps: int
-    :param include_dc: Whether to apportion representatives to the District of Columbia.
+    :param include_dc: Whether to apportion representatives to the District of 
+    Columbia.
     :type include_dc: bool
     :param include_pr: Whether to apportion representatives to Puerto Rico.
     :type include_pr: bool
@@ -56,13 +58,16 @@ def apportion_representatives(
 
 def huntington_hill(population_df, min_total_reps, min_state_reps=1):
     """
-    Apportion representatives according to the Huntington-Hill apportionment method.
+    Apportion representatives according to the Huntington-Hill apportionment 
+    method.
 
-    :param population_df: A dataframe of states (and/or territories) with populations
+    :param population_df: A dataframe of states (and/or territories) with 
+    populations
     :type population_df: pandas.core.frame.DataFrame
     :param min_total_reps: Least number of representatives to apportion.
     :type min_total_reps: int
-    :param min_state_reps: Least allowable number of representatives in one state.
+    :param min_state_reps: Least allowable number of representatives in one 
+    state.
     :type min_state_reps: int
     
     Note that there will always be at least one representative per state.
