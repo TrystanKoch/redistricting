@@ -1,5 +1,8 @@
 """For splitting regions into districts recursively."""
 
+from . import flat_geometry
+from . import spherical_geometry
+
 def horizontal_splitter(region_block_centroids, max_small_district_population):
     """Splits a region in two, by population, horizontally.
 
@@ -131,3 +134,39 @@ def split_state(block_centroids, num_districts):
     district_count = 0
     region_mask = block_centroids["district"].notna()
     split_district(block_centroids, region_mask, num_districts, district_count)
+
+
+def get_splitline_length(shape, p, theta, crs):
+    """Returns the great_circle length of a splitline.
+
+    Parameters
+    ----------
+    shape : shapely.Geometry
+        The shape corresponding to a region to be split
+    p : shapely.geometry.Point
+        A point on the splitline
+    theta : float
+        Angle of a split line at a point
+    crs : pyproj.CRS
+        Coordinate reference system that the points and shapes are defined in
+
+    Returns
+    -------
+    float
+        The great circle distance of the splitline within the shape
+
+    Notes
+    -----
+    This takes a shapely Geometry, not a GeoDataFrame, so the geometry must be
+    stripped from the GeoDataFrame first before calling this function.
+
+    The distance is returned in the units of the crs that we pass in. For
+    this project, this is assumed to be meters, though nothing here will
+    rely on that assumption.
+    """
+    boundary_p1, boundary_p2 = flat_geometry.boundary_intersection_points(
+        shape, p, theta
+    )
+    return spherical_geometry.find_great_circle_distance(
+        boundary_p1, boundary_p2, crs
+    )

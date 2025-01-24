@@ -2,6 +2,8 @@
 
 import numpy as np
 import pandas as pd
+import shapely
+import math
 
 def theta_from_steps(step, total_steps):
     """Converts angular steps to radians.
@@ -136,3 +138,115 @@ def sort_by_angle_step(df_, n):
         Sorted dataframe
     """
     return df_.sort_values([str(n)])
+
+
+def point_angle_line(p, theta, length=2_000_000):
+    """Create a long line from a point and an azimuthal angle.
+
+    Parameters
+    ----------
+    p : shapely.geometry.Point
+        A midpoint on the line
+    theta : float
+        The angle at which the line intercepts the point
+
+    Returns
+    -------
+    shapely.geometry.LineString
+        A long line that intercepts the point p at an angle theta
+    
+    Other Parameters
+    ----------------
+    length : float
+        The length of the line, larger than any shape considered
+    """
+    p0 = np.array([p.x, p.y])
+    t = line_tangent(theta)
+    d = length
+    start_p = p0 - t*d/2
+    end_p = p0 + t*d/2
+    return shapely.LineString([
+        start_p,
+        end_p
+    ])
+
+
+def directed_distance(p, t):
+    """Dot product of the point's position vector with a vector.
+
+    Parameters
+    ----------
+    p : shapely.geometry.Point
+        A location
+    t : numpy.ndarray
+        A 2D vector
+
+    Returns
+    -------
+    float
+        The distance of a point from the origin in the direction t.
+
+    Notes
+    -----
+    For this to be interpretable, t should be a unit vector. Strictly
+    speaking, this is not necessary.
+    """
+    return p.x*t[0] + p.y*t[1]
+
+
+def boundary_intersection_points(shape, p, theta):
+    """Find the intersection of a shape's boundary and a line.
+
+    Parameters
+    ----------
+    shape : shapely.Geometry
+        A shape representing a region 
+    p : shapely.geometry.Point
+        A point the line goes through
+    theta : float
+        The angle in radians at which the line intercepts the point
+
+    Returns
+    -------
+    tuple[shapely.geometry.Point, shapely.geometry.Point]
+        Two points where the line intersects the shape's boundary
+
+    Notes
+    -----
+    For this to be interperetable, the point p should be inside the shape
+    under consideration.
+
+    Additionally, if there are more than two intersections, this function
+    will return the two that are most distant from one another.
+
+    The points are returned in order of the directed distance along the line.
+    A line at angle theta and a line at angle theta + pi, will therefore
+    return the same points but in reverse order.
+    """
+
+    boundary = shape.boundary
+    line = point_angle_line(p, theta)
+    intersections = shapely.intersection(boundary, line)
+
+    t = line_tangent(theta)
+
+    min_d = math.inf
+    max_idx = 0
+    max_d = -math.inf
+    min_idx = 0
+    idx = 0
+
+    for p in intersections.geoms:
+        d = directed_distance(p, t)
+        if d < min_d:
+            min_d = d
+            min_idx = idx
+        if d > max_d:
+            max_d = d
+            max_idx = idx
+        idx += 1
+
+    start_point = intersections.geoms[min_idx]
+    end_point = intersections.geoms[max_idx]
+
+    return start_point, end_point
