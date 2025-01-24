@@ -252,3 +252,24 @@ def boundary_intersection_points(shape, p, theta):
     end_point = intersections.geoms[max_idx]
 
     return start_point, end_point
+
+
+def midpoint(p1, p2):
+    """Find a point halfway beteen two points.
+
+    Parameters
+    ----------
+    p1 : shapely.geometry.Point
+        A point
+    p2 : shapely.geometry.Point
+        A second point
+
+    Returns
+    -------
+    shapely.geometry.Point
+        A point halfway between the inputs
+    """
+    return shapely.geometry.Point(
+        (p1.x + p2.x) / 2,
+        (p1.y + p2.y) / 2
+    )

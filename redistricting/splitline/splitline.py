@@ -3,6 +3,8 @@
 from . import flat_geometry
 from . import spherical_geometry
 
+import shapely
+
 def horizontal_splitter(region_block_centroids, max_small_district_population):
     """Splits a region in two, by population, horizontally.
 
@@ -95,9 +97,10 @@ def split_district(cb_blocks, region_mask, num_districts, district_count):
     # Split the district with a splitting function.
     # Note that we assume our function returns a mask for the smaller of the
     # two regions.
-    small_district_mask = horizontal_splitter(
+    small_district_mask = angle_splitter(
         cb_blocks.mask(~region_mask),
-        small_district_population
+        small_district_population,
+        step=3
     )
 
     # Recurse using the smaller district.
@@ -169,4 +172,116 @@ def get_splitline_length(shape, p, theta, crs):
     )
     return spherical_geometry.find_great_circle_distance(
         boundary_p1, boundary_p2, crs
+    )
+
+
+def angle_splitter(region_block_centroids, max_small_district_population, step):
+    r"""Splits a region in two, by population, with a line at a given angle.
+
+    Splits a region into two. The smaller region will have a population that is
+    as large as possible while still being less than a given population. The
+    split will occur along a line with a given angle to the horizontal.
+
+    Parameters
+    ----------
+    region_block_centroids : pandas.core.frame.DataFrame
+        A dataframe that corresponds to a region
+    max_small_district_population : int
+        A population maximum for the smaller of the resulting districts
+    step : int or str
+        Corresponds to an anglular step around a revolution
+
+    Returns
+    -------
+    pandas.core.frame.DataFrame
+        A mask that is true for all blocks part of the smaller region
+
+    Notes
+    -----
+    We are taking a full revolution in some number of total anglular steps. The
+    angle in radians from the horizontal can be determined from the formula
+
+    .. math:: \theta_n = 2\pi n/N
+
+    where :math:`n` is the step number and :math:`N` is the total number of
+    steps.
+    """
+    return (
+        # This should be one of our cleaned centroid blocks.
+        region_block_centroids
+
+        # Sort by the column that corresponds to distance along a specified
+        # direction. The directions are labeled by the angular step we are on.
+        .sort_values([str(step)])
+
+        # Find the cumulative sum of the population. This is equivalent to
+        # slowly moving our dividing line in the direction normal to the
+        # angluar step we chose, then finding how much of our population is
+        # behind that line.
+        ["POP20"].cumsum()
+
+        # Finally, create a mask which is true only if that cumulative sum is
+        # less than our specified maximum population
+        < max_small_district_population
+    )
+
+
+def find_splitline_point(block_centroids, small_mask, step):
+    """Determine a point on which to base a splitline,
+
+    Parameters
+    ----------
+    block_centroids : geopandas.GeoDataFrame
+        A dataframe representing census blocks
+    small_mask : pandas.core.frame.DataFrame
+        A region mask having a smaller population than its complement
+    step : int or str
+        The angular direction we are splitting in
+
+    Returns
+    -------
+    shapely.geometry.Point
+        A point on the splitline between the regions.
+    """
+    last_small_idx = (
+        # For all the centroids
+        block_centroids
+
+        # Look at only the ones in the smaller region
+        .loc[small_mask]
+
+        # Look at their directed distance from the origin
+        # in a particular angular direction
+        [str(step)]
+
+        # Find the one with the mazimum directed distance
+        .idxmax(axis=0)
+    )
+
+    first_big_idx = (
+        # Now for all the centroids
+        block_centroids
+
+        # Look at the ones in the larger region
+        .loc[~small_mask]
+
+        # Still looking at the directed distance in a
+        # particular angular direction.
+        [str(step)]
+
+        # We want to find the first element that was not
+        # in the smaller region
+        .idxmin(axis=0)
+    )
+
+    # Find the GeoSeries that correspond to these points
+    p1_df = block_centroids.iloc[last_small_idx]
+    p2_df = block_centroids.iloc[first_big_idx]
+
+    # Return a point that is halfway between them
+    # Note that this will always be a point between our two
+    # regions determined by the region mask.
+    return shapely.Point(
+        (p1_df.x + p2_df.x) / 2,
+        (p1_df.y + p2_df.y) / 2
     )

@@ -24,6 +24,7 @@ def census_block_centroids(census_blocks, gnomonic_crs):
     geopandas.geodataframe.GeoDataFrame
         Census_block centroids with GEOID, population, and gnomonic locations
     """
+    census_crs = census_blocks.crs
     return (
         # The Census already calculates an internal central point
         # for all census blocks. Let's turn this information into
@@ -58,7 +59,7 @@ def census_block_centroids(census_blocks, gnomonic_crs):
         # Ultimately, we want to store the centroid geometry in
         # NAD83's latitude and longitude to facilitate further
         # processing. So we need to convert back.
-        .to_crs("EPSG:4326")
+        .to_crs(census_crs)
     )
 
 
