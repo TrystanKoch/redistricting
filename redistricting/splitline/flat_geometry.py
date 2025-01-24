@@ -1,9 +1,11 @@
 """Functions that operate only in flat projections of the spherical space."""
 
+import math
+
 import numpy as np
 import pandas as pd
 import shapely
-import math
+
 
 def theta_from_steps(step, total_steps):
     """Converts angular steps to radians.
