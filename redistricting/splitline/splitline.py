@@ -1,9 +1,10 @@
 """For splitting regions into districts recursively."""
 
+import shapely
+
 from . import flat_geometry
 from . import spherical_geometry
 
-import shapely
 
 def horizontal_splitter(region_block_centroids, max_small_district_population):
     """Splits a region in two, by population, horizontally.
