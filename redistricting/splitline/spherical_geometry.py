@@ -131,7 +131,15 @@ def find_great_circle_distance(start, end, crs, lat_lon_crs_name="EPSG:4326"):
     lat_lon_crs_name : str
         An identifier for a CRS that gives latitude and longitude.
     """
-    start_lat_lon = geom_with_crs(start, crs).to_crs(lat_lon_crs_name).geometry.iloc[0]
+    start_lat_lon = (
+        geom_with_crs(start, crs)
+        .to_crs(lat_lon_crs_name)
+        .geometry.iloc[0]
+    )
     aeqd_crs = aeqd_from_point(start_lat_lon)
-    end_aeqd = geom_with_crs(end, crs).to_crs(aeqd_crs).geometry.iloc[0]
+    end_aeqd = (
+        geom_with_crs(end, crs)
+        .to_crs(aeqd_crs)
+        .geometry.iloc[0]
+    )
     return distance_to_aeqd_point(end_aeqd)
