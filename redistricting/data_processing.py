@@ -53,8 +53,8 @@ def create_state_data():
         )
     )
 
-    state_data_full = pd.merge(
-        pops, fips,
+    state_data_full = pops.merge(
+        fips,
         how="inner",
         on="STATE",
     )
