@@ -39,13 +39,13 @@ line-length = 79
 
   [tool.ruff.lint]
   extend-select = [
-    "D",  # pydocstyle
-    "E",
-    "W",
-    "PD",
-    "PL",
-    "RUF",
-    "TRY"
+    "D",   # pydocstyle
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "PL",  # PyLint
+    "RUF", # Ruff-specific
+    "PD",  # Pandas-specific Linting
+    "TRY", # Try-Except Linting
   ]
 
   [tool.ruff.lint.pydocstyle]
