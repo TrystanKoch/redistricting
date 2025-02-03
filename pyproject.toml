@@ -34,6 +34,11 @@ classifiers = [
   #redistrict-leastquares = ""
   #redistrict-circle-splitline = ""
 
+[tool.mypy]
+strict = true
+check_untyped_defs = false
+disallow_untyped_defs = false
+
 [tool.ruff]
 line-length = 79
 
