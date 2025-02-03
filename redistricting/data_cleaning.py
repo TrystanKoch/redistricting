@@ -10,7 +10,7 @@ def census_block_centroids(census_blocks, gnomonic_crs):
     to only include this information. We keep the GEOID information for
     the blocks so that we can join our districts to the original blocks
     later.
-    
+
     Parameters
     ----------
     census_blocks : geopandas.geodataframe.GeoDataFrame
@@ -23,7 +23,7 @@ def census_block_centroids(census_blocks, gnomonic_crs):
     -------
     geopandas.geodataframe.GeoDataFrame
         Census_block centroids with GEOID, population, and gnomonic locations
-    
+
     """
     census_crs = census_blocks.crs
     return (
@@ -71,12 +71,12 @@ def state_boundary(state_shape):
     ----------
     state_shape : geopandas.geodataframe.GeoDataFrame
         Shape information for a state
-    
+
     Returns
     -------
     geopandas.geodataframe.GeoDataFrame
         Boundary information for a state
-    
+
     """
     return state_shape.geometry.boundary
 
@@ -88,10 +88,10 @@ def apportionment_drop_pr(states):
     ----------
     states : pandas.core.frame.DataFrame
         Cleaned state populations table
-    
+
     pandas.core.frame.DataFrame
         Cleaned state populations table without Puerto Rico
-    
+
     """
     return (
         states
@@ -111,7 +111,7 @@ def apportionment_drop_dc(states):
     -------
     pandas.core.frame.DataFrame
         Cleaned state populations table without DC
-    
+
     """
     return (
         states

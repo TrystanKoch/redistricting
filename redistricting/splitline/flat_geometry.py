@@ -9,7 +9,7 @@ import shapely
 
 def theta_from_steps(step, total_steps):
     """Convert angular steps to radians.
-    
+
     Gives the angle in radians swept out by "step" steps if a full revolution
     has been split into "total_steps" steps.
 
@@ -24,7 +24,7 @@ def theta_from_steps(step, total_steps):
     -------
     float
         An angle, in radians.
-    
+
     """
     return (2 * np.pi) * (step / total_steps)
 
@@ -40,12 +40,12 @@ def line_normal(theta):
     ----------
     theta : float
         The angle in radians of a line with respect to the horizontal
-    
+
     Returns
     -------
     numpy.ndarray
         A 2D unit vector at an angle theta + pi
-    
+
     """
     return np.array([
         -np.sin(theta),
@@ -63,12 +63,12 @@ def line_tangent(theta):
     ----------
     theta : float
         The angle in radians of a line with respect to the horizontal
-    
+
     Returns
     -------
     numpy.ndarray
         A 2D unit vector at an angle theta
-    
+
     """
     return np.array([
         np.cos(theta),
@@ -95,7 +95,7 @@ def position_dot_products(df_, total_steps):
     -------
     pandas.core.frame.DataFrame
         Original dataframe with additional columns of dot products
-    
+
     """
     # Create a smaller dataframe just from the relevent columns.
     df_xy = df_[["x", "y"]]
@@ -128,7 +128,7 @@ def position_dot_products(df_, total_steps):
 def sort_by_angle_step(df_, n):
     """Sort a dataframe by a column of directed distances.
 
-    Sorts a dataframe by the column representing a particular angular step's 
+    Sorts a dataframe by the column representing a particular angular step's
     dot products.
 
     Parameters
@@ -142,7 +142,7 @@ def sort_by_angle_step(df_, n):
     -------
     pandas.core.frame.DataFrame
         Sorted dataframe
-    
+
     """
     return df_.sort_values([str(n)])
 
@@ -163,7 +163,7 @@ def point_angle_line(p, theta, length=2_000_000):
     -------
     shapely.geometry.LineString
         A long line that intercepts the point p at an angle theta
-    
+
     """
     p0 = np.array([p.x, p.y])
     t = line_tangent(theta)
@@ -206,7 +206,7 @@ def boundary_intersection_points(shape, p, theta):
     Parameters
     ----------
     shape : shapely.Geometry
-        A shape representing a region 
+        A shape representing a region
     p : shapely.geometry.Point
         A point the line goes through
     theta : float
@@ -272,7 +272,7 @@ def midpoint(p1, p2):
     -------
     shapely.geometry.Point
         A point halfway between the inputs
-    
+
     """
     return shapely.geometry.Point(
         (p1.x + p2.x) / 2,

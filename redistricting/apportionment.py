@@ -69,7 +69,7 @@ def huntington_hill(population_df, min_total_reps, min_state_reps=1):
         Least number of representatives to apportion
     min_state_reps : int
         Least allowable number of representatives in one state
-    
+
     """
     tmp_df = population_df.copy()
     tmp_df[REPS_COL] = 1

@@ -16,7 +16,7 @@ def download_file(url, destination):
         URL of the desired file
     destination : str
         Filename to save project to
-    
+
     """
     with (
         open(destination, "wb+") as local_file,
@@ -53,7 +53,7 @@ def ensure_census_file(
     -------
     bool
         Whether the specified file exists now
-    
+
     """
     # Check if directory exists already. If not, make it.
     try:
@@ -86,7 +86,7 @@ def ensure_state_shapes(redownload=False, config=None):
         Whether we want to redownload the file if it already exists
     config : Optional[dict]
         Optional configuration dictionary
-    
+
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(
@@ -105,7 +105,7 @@ def ensure_fips_identifiers(redownload=False, config=None):
         Whether we want to redownload the file if it already exists
     config : Optional[dict]
         Optional configuration dictionary
-    
+
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(
@@ -127,7 +127,7 @@ def ensure_state_census_blocks(fips_id, redownload=False, config=None):
         Whether we want to redownload the file if it already exists
     config : Optional[dict]
         Optional configuration dictionary
-    
+
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(
@@ -146,7 +146,7 @@ def ensure_state_population_table(redownload=False, config=False):
         Whether we want to redownload the file if it already exists
     config : Optional[dict]
         Optional configuration dictionary
-    
+
     """
     config = config_parsing.ensure_config(config)
     ensure_census_file(

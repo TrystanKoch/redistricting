@@ -9,7 +9,7 @@ import pyproj
 def centered_gnomonic_crs(shape):
     """Create gnomonic coordinate reference system around a point.
 
-    Creates a gnomonic CRS centered at a geographic shape's approximate 
+    Creates a gnomonic CRS centered at a geographic shape's approximate
     centroid.
 
     A "gnomonic" projection is one where all lines represent great circles.
@@ -18,12 +18,12 @@ def centered_gnomonic_crs(shape):
     ----------
     shape : geopandas.geodataframe.GeoDataFrame
         A geographic shape defined through latitude and longitude in NAD83
-    
+
     Returns
     -------
     pyproj.crs.crs.CRS
         A gnomonic CRS centered on the geographic shape
-    
+
     """
     with warnings.catch_warnings():
         # The exact point we choose for our crs will not affect the great
@@ -43,12 +43,12 @@ def centered_gnomonic_crs(shape):
 
 def aeqd_from_point(p):
     """Create an Azimuthal Equidistand CRS centered at a point.
-    
+
     Parameters
     ----------
     p : shapely.geometry.Point
         A point intended as the center of an Azimuthal equidistant projection
-    
+
     Returns
     -------
     pyproj.CRS
@@ -79,7 +79,7 @@ def distance_to_aeqd_point(p):
     -------
     float
         The distance between this point and the origin
-    
+
     Notes
     -----
     Intended to be used along with a point in an azimuthal equidistant
@@ -104,7 +104,7 @@ def geom_with_crs(geometry, crs):
     -------
     geopandas.DataFrame
         A geodataframe wrapping the geometry with the crs
-    
+
     """
     return gpd.GeoDataFrame(
         {'geometry' : [geometry]},
@@ -130,7 +130,7 @@ def find_great_circle_distance(start, end, crs, lat_lon_crs_name="EPSG:4326"):
     -------
     float
         The great circle distance between the two points.
-    
+
     """
     start_lat_lon = (
         geom_with_crs(start, crs)

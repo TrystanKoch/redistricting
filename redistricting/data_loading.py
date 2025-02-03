@@ -21,7 +21,7 @@ def load_state_census_blocks(fips):
     -------
     geopandas.DataFrame
         A state's census blocks
-    
+
     """
     data_acquisition.ensure_state_census_blocks(fips)
     return gpd.read_file(config_parsing.census_blocks_location(fips))
@@ -39,7 +39,7 @@ def load_state_shape(fips):
     -------
     geopandas.DataFrame
         A state's shape information
-    
+
     """
     data_acquisition.ensure_state_shapes()
     state_shapes_raw = gpd.read_file(config_parsing.state_shapes_location())
@@ -53,7 +53,7 @@ def load_state_data():
     -------
     pandas.core.frame.DataFrame
         The data table for US states and territories
-    
+
     """
     state_data_location = config_parsing.state_data_location()
     if not os.path.isfile(state_data_location):
@@ -68,7 +68,7 @@ def load_country_data():
     -------
     pandas.core.frame.DataFrame
         The data table for the US population
-    
+
     """
     country_data_location = config_parsing.country_data_location()
     if not os.path.isfile(country_data_location):
