@@ -7,7 +7,7 @@ from . import data_acquisition
 from . import config_parsing
 
 
-def create_state_data():
+def create_state_data() -> None:
     """Processs census files to a single state population lookup table.
 
     Notes
@@ -72,7 +72,7 @@ def create_state_data():
     state_data.to_csv(config_parsing.state_data_location(), index=False)
 
 
-def create_country_data():
+def create_country_data() -> None:
     """Processs census files to a single country-wide population lookup table.
 
     Notes

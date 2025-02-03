@@ -3,6 +3,8 @@
 from enum import StrEnum
 from math import sqrt
 
+import pandas as pd
+
 from . import data_loading
 from . import data_cleaning
 
@@ -16,12 +18,12 @@ class ApportionmentMethod(StrEnum):
 
 
 def apportion_representatives(
-        min_total_reps=435,
-        min_state_reps=1,
-        include_dc=False,
-        include_pr=False,
-        method=ApportionmentMethod.HHILL
-    ):
+        min_total_reps: int = 435,
+        min_state_reps: int = 1,
+        include_dc: bool = False,
+        include_pr: bool = False,
+        method: ApportionmentMethod = ApportionmentMethod.HHILL
+    ) -> pd.DataFrame:
     """Apportion US Representatives to the states.
 
     Parameters
@@ -37,6 +39,10 @@ def apportion_representatives(
     method : ApportionmentMethod
         Representative apportionment method
 
+    Returns
+    -------
+    pd.dataFrame
+        A list of states with representatives apportioned
     """
     states = data_loading.load_state_data()
 
@@ -55,8 +61,11 @@ def apportion_representatives(
         return huntington_hill(states, min_total_reps, min_state_reps)
 
 
-
-def huntington_hill(population_df, min_total_reps, min_state_reps=1):
+def huntington_hill(
+        population_df: pd.DataFrame,
+        min_total_reps: int,
+        min_state_reps: int = 1
+    ) -> pd.DataFrame:
     """Apportion representatives by Huntington-Hill method.
 
     Note that there will always be at least one representative per state.
@@ -69,6 +78,11 @@ def huntington_hill(population_df, min_total_reps, min_state_reps=1):
         Least number of representatives to apportion
     min_state_reps : int
         Least allowable number of representatives in one state
+
+    Returns
+    -------
+    pd.DataFrame
+        A list of states with representatives apportioned
 
     """
     tmp_df = population_df.copy()
@@ -87,8 +101,8 @@ def huntington_hill(population_df, min_total_reps, min_state_reps=1):
     while reps > 0 or tmp_df[REPS_COL].min() < min_state_reps:
         next_state_id = tmp_df.avg_district_pop.idxmax(axis=0)
         tmp_df.loc[next_state_id, REPS_COL] += 1
-        p = tmp_df.loc[next_state_id, POP_COL]
-        n = tmp_df.loc[next_state_id, REPS_COL]
+        p: int = tmp_df.loc[next_state_id, POP_COL]
+        n: int = tmp_df.loc[next_state_id, REPS_COL]
         tmp_df.loc[next_state_id, "avg_district_pop"] = p/sqrt(n*(n+1))
         reps -= 1
 
