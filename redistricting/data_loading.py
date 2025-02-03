@@ -9,12 +9,12 @@ from . import data_acquisition
 from . import data_processing
 
 
-def load_state_census_blocks(fips):
+def load_state_census_blocks(fips: int) -> gpd.GeoDataFrame:
     """Load the census blocks for a state.
 
     Parameters
     ----------
-    fips : int or str
+    fips : int
         The FIPS identifier for the state
 
     Returns
@@ -27,12 +27,12 @@ def load_state_census_blocks(fips):
     return gpd.read_file(config_parsing.census_blocks_location(fips))
 
 
-def load_state_shape(fips):
+def load_state_shape(fips: int) -> gpd.GeoDataFrame:
     """Load a state shape from the state shapes file.
 
     Parameters
     ----------
-    fips : int or str
+    fips : int
         The FIPS identifier for the state
 
     Returns
@@ -43,10 +43,12 @@ def load_state_shape(fips):
     """
     data_acquisition.ensure_state_shapes()
     state_shapes_raw = gpd.read_file(config_parsing.state_shapes_location())
-    return state_shapes_raw[state_shapes_raw["STATEFP"] == str(fips)]
+    state_shape = state_shapes_raw[state_shapes_raw["STATEFP"] == str(fips)]
+    assert isinstance(state_shape, gpd.GeoDataFrame)
+    return state_shape
 
 
-def load_state_data():
+def load_state_data() -> pd.DataFrame:
     """Load the state data table.
 
     Returns
@@ -61,7 +63,7 @@ def load_state_data():
     return pd.read_csv(state_data_location)
 
 
-def load_country_data():
+def load_country_data() -> pd.DataFrame:
     """Load the country data table.
 
     Returns
