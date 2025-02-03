@@ -5,6 +5,7 @@ import sys
 FIPS="FIPS"
 ABBR="ABBR"
 STATE="STATE"
+FIPS_LEN=2
 
 def parse_state(state_arg, state_df):
     """Determine which state the user wants.
@@ -24,9 +25,9 @@ def parse_state(state_arg, state_df):
     """
     state_arg = " ".join(state_arg)
 
-    if state_arg.isdigit() and len(state_arg) <= 2:
+    if state_arg.isdigit() and len(state_arg) <= FIPS_LEN:
         state_entry = state_df[state_df[FIPS] == int(state_arg)]
-    elif len(state_arg) == 2:
+    elif len(state_arg) == FIPS_LEN:
         state_entry = state_df[state_df[ABBR] == state_arg.upper()]
     else:
         state_entry = state_df[state_df[STATE] == state_arg.title()]

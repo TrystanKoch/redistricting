@@ -242,8 +242,8 @@ def boundary_intersection_points(shape, p, theta):
     min_idx = 0
     idx = 0
 
-    for p in intersections.geoms:
-        d = directed_distance(p, t)
+    for point in intersections.geoms:
+        d = directed_distance(point, t)
         if d < min_d:
             min_d = d
             min_idx = idx

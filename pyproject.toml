@@ -42,6 +42,7 @@ line-length = 79
     "D",  # pydocstyle
     "E",
     "W",
+    "PL"
   ]
 
   [tool.ruff.lint.pydocstyle]

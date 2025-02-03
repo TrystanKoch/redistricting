@@ -5,7 +5,7 @@ from . import spherical_geometry
 from . import splitline
 
 __all__ = [
-    flat_geometry,
-    spherical_geometry,
-    splitline
+    "flat_geometry",
+    "spherical_geometry",
+    "splitline"
 ]

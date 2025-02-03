@@ -9,11 +9,11 @@ from . import data_processing
 from .splitline import splitline
 
 __all__ = [
-    apportionment,
-    cl_argument_parsing,
-    config_parsing,
-    data_acquisition,
-    data_loading,
-    data_processing,
-    splitline
+    "apportionment",
+    "cl_argument_parsing",
+    "config_parsing",
+    "data_acquisition",
+    "data_loading",
+    "data_processing",
+    "splitline"
 ]
