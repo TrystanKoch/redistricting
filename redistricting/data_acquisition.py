@@ -3,11 +3,13 @@
 import urllib
 import os.path
 
+from typing import Optional
+
 from . import config_parsing
 
 CONFIG = "config.toml"
 
-def download_file(url, destination):
+def download_file(url: str, destination: str) -> None:
     """Download a web file's data into a local file.
 
     Parameters
@@ -26,12 +28,12 @@ def download_file(url, destination):
 
 
 def ensure_census_file(
-        directory,
-        filename,
-        url,
-        redownload=False,
-        interactive=False
-    ):
+        directory: str,
+        filename: str,
+        url: str,
+        redownload: bool =False,
+        interactive: bool =False
+    ) -> bool:
     """Ensure that a file exists.
 
     Checks whether a file exists in a given directory. If not, downloads it.
@@ -77,7 +79,10 @@ def ensure_census_file(
     return True
 
 
-def ensure_state_shapes(redownload=False, config=None):
+def ensure_state_shapes(
+        redownload: bool = False,
+        config: Optional[dict] = None
+    ) -> None:
     """Ensure we have the state shape file from the census.
 
     Parameters
@@ -96,7 +101,10 @@ def ensure_state_shapes(redownload=False, config=None):
         redownload=redownload
     )
 
-def ensure_fips_identifiers(redownload=False, config=None):
+def ensure_fips_identifiers(
+        redownload: bool = False,
+        config: Optional[dict] = None
+    ) -> None:
     """Ensure we have the fips identifier table from the census.
 
     Parameters
@@ -116,12 +124,16 @@ def ensure_fips_identifiers(redownload=False, config=None):
     )
 
 
-def ensure_state_census_blocks(fips_id, redownload=False, config=None):
+def ensure_state_census_blocks(
+        fips_id: int,
+        redownload: bool = False,
+        config: Optional[dict] = None
+    ) -> None:
     """Ensure we have the census block file for a state.
 
     Parameters
     ----------
-    fips_id : int or str
+    fips_id : int
         The two digit FIPS identifier for a particular state
     redownload : bool
         Whether we want to redownload the file if it already exists
@@ -137,7 +149,10 @@ def ensure_state_census_blocks(fips_id, redownload=False, config=None):
         redownload=redownload
     )
 
-def ensure_state_population_table(redownload=False, config=False):
+def ensure_state_population_table(
+        redownload: bool = False,
+        config: Optional[dict] = None
+    ) -> None:
     """Ensure we have the state population table from the census.
 
     Parameters
