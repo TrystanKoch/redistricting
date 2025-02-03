@@ -8,7 +8,7 @@ import shapely
 
 
 def theta_from_steps(step, total_steps):
-    """Converts angular steps to radians.
+    """Convert angular steps to radians.
     
     Gives the angle in radians swept out by "step" steps if a full revolution
     has been split into "total_steps" steps.
@@ -24,13 +24,14 @@ def theta_from_steps(step, total_steps):
     -------
     float
         An angle, in radians.
+    
     """
     return (2 * np.pi) * (step / total_steps)
 
 
 
 def line_normal(theta):
-    """Returns a line's unit normal vector.
+    """Return a 2D line's unit normal vector.
 
     A 2D unit vector that is normal to a line at an angle of theta radians
     with respect to the horizontal.
@@ -44,6 +45,7 @@ def line_normal(theta):
     -------
     numpy.ndarray
         A 2D unit vector at an angle theta + pi
+    
     """
     return np.array([
         -np.sin(theta),
@@ -52,7 +54,7 @@ def line_normal(theta):
 
 
 def line_tangent(theta):
-    """Returns a line's unit tangent vector
+    """Return a 2D line's unit tangent vector.
 
     A 2D unit vector that is tangent to a line at an angle of theta radians
     with respect to the horizontal.
@@ -66,6 +68,7 @@ def line_tangent(theta):
     -------
     numpy.ndarray
         A 2D unit vector at an angle theta
+    
     """
     return np.array([
         np.cos(theta),
@@ -74,7 +77,7 @@ def line_tangent(theta):
 
 
 def position_dot_products(df_, total_steps):
-    """Finds many directed positions for all points in a dataframe.
+    """Find many directed positions for all points in a dataframe.
 
     Finds the dot products of the position vector (x,y) with the line
     normals for each angle, given a number of steps around the circle we wish
@@ -92,6 +95,7 @@ def position_dot_products(df_, total_steps):
     -------
     pandas.core.frame.DataFrame
         Original dataframe with additional columns of dot products
+    
     """
     # Create a smaller dataframe just from the relevent columns.
     df_xy = df_[["x", "y"]]
@@ -138,6 +142,7 @@ def sort_by_angle_step(df_, n):
     -------
     pandas.core.frame.DataFrame
         Sorted dataframe
+    
     """
     return df_.sort_values([str(n)])
 
@@ -151,16 +156,14 @@ def point_angle_line(p, theta, length=2_000_000):
         A midpoint on the line
     theta : float
         The angle at which the line intercepts the point
+    length : float
+        The length of the line, larger than any shape considered
 
     Returns
     -------
     shapely.geometry.LineString
         A long line that intercepts the point p at an angle theta
     
-    Other Parameters
-    ----------------
-    length : float
-        The length of the line, larger than any shape considered
     """
     p0 = np.array([p.x, p.y])
     t = line_tangent(theta)
@@ -192,6 +195,7 @@ def directed_distance(p, t):
     -----
     For this to be interpretable, t should be a unit vector. Strictly
     speaking, this is not necessary.
+
     """
     return p.x*t[0] + p.y*t[1]
 
@@ -224,8 +228,8 @@ def boundary_intersection_points(shape, p, theta):
     The points are returned in order of the directed distance along the line.
     A line at angle theta and a line at angle theta + pi, will therefore
     return the same points but in reverse order.
-    """
 
+    """
     boundary = shape.boundary
     line = point_angle_line(p, theta)
     intersections = shapely.intersection(boundary, line)
@@ -268,6 +272,7 @@ def midpoint(p1, p2):
     -------
     shapely.geometry.Point
         A point halfway between the inputs
+    
     """
     return shapely.geometry.Point(
         (p1.x + p2.x) / 2,

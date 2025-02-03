@@ -10,7 +10,7 @@ from . import data_processing
 
 
 def load_state_census_blocks(fips):
-    """Loads the census blocks for a state.
+    """Load the census blocks for a state.
 
     Parameters
     ----------
@@ -21,13 +21,14 @@ def load_state_census_blocks(fips):
     -------
     geopandas.DataFrame
         A state's census blocks
+    
     """
     data_acquisition.ensure_state_census_blocks(fips)
     return gpd.read_file(config_parsing.census_blocks_location(fips))
 
 
 def load_state_shape(fips):
-    """Loads a state shape from the state shapes file.
+    """Load a state shape from the state shapes file.
 
     Parameters
     ----------
@@ -38,6 +39,7 @@ def load_state_shape(fips):
     -------
     geopandas.DataFrame
         A state's shape information
+    
     """
     data_acquisition.ensure_state_shapes()
     state_shapes_raw = gpd.read_file(config_parsing.state_shapes_location())
@@ -45,12 +47,13 @@ def load_state_shape(fips):
 
 
 def load_state_data():
-    """Loads the state data table.
+    """Load the state data table.
 
     Returns
     -------
     pandas.core.frame.DataFrame
         The data table for US states and territories
+    
     """
     state_data_location = config_parsing.state_data_location()
     if not os.path.isfile(state_data_location):
@@ -59,12 +62,13 @@ def load_state_data():
 
 
 def load_country_data():
-    """Loads the country data table.
+    """Load the country data table.
 
     Returns
     -------
     pandas.core.frame.DataFrame
         The data table for the US population
+    
     """
     country_data_location = config_parsing.country_data_location()
     if not os.path.isfile(country_data_location):

@@ -20,6 +20,7 @@ def parse_state(state_arg, state_df):
         A string representing user input
     state_df: pandas.core.frame.DataFrame
         A dataframe where we can look up a state's FIPS id
+    
     """
     state_arg = " ".join(state_arg)
 

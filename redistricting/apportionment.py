@@ -10,7 +10,8 @@ POP_COL = "POP20"
 REPS_COL = "reps"
 
 class ApportionmentMethod(StrEnum):
-    """Possible Apportionment methods"""
+    """Possible Apportionment methods."""
+
     HHILL = "huntington_hill"
 
 
@@ -35,8 +36,8 @@ def apportion_representatives(
         Whether to apportion representatives to Puerto Rico
     method : ApportionmentMethod
         Representative apportionment method
-    """
 
+    """
     states = data_loading.load_state_data()
 
     if not include_dc:
@@ -68,6 +69,7 @@ def huntington_hill(population_df, min_total_reps, min_state_reps=1):
         Least number of representatives to apportion
     min_state_reps : int
         Least allowable number of representatives in one state
+    
     """
     tmp_df = population_df.copy()
     tmp_df[REPS_COL] = 1

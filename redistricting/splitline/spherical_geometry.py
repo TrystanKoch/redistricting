@@ -23,8 +23,8 @@ def centered_gnomonic_crs(shape):
     -------
     pyproj.crs.crs.CRS
         A gnomonic CRS centered on the geographic shape
+    
     """
-
     with warnings.catch_warnings():
         # The exact point we choose for our crs will not affect the great
         # circle we find, so the centroid does not need to be exact. Assume
@@ -58,6 +58,7 @@ def aeqd_from_point(p):
     -----
     The coordinates of p must be latitude and longitude for this function to
     either work or have any meaning.
+
     """
     return pyproj.CRS.from_proj4(
         f"+proj=aeqd "
@@ -67,11 +68,11 @@ def aeqd_from_point(p):
 
 
 def distance_to_aeqd_point(p):
-    """Computes a distance between a point and the origin.
+    """Compute a distance between a point and the origin.
 
     Parameters
     ----------
-     p : shapely.geometry.Point
+    p : shapely.geometry.Point
         A point in an azimuthal equidistant coordinate reference system
 
     Returns
@@ -84,12 +85,13 @@ def distance_to_aeqd_point(p):
     Intended to be used along with a point in an azimuthal equidistant
     coordinate reference system that is centered on an origin point. In any
     other case, this is just a flat 2d distance.
+
     """
     return math.sqrt(p.x*p.x + p.y*p.y)
 
 
 def geom_with_crs(geometry, crs):
-    """Converts a shapely geometry back to a geodataframe.
+    """Convert a shapely geometry back to a geodataframe.
 
     Parameters
     ----------
@@ -102,6 +104,7 @@ def geom_with_crs(geometry, crs):
     -------
     geopandas.DataFrame
         A geodataframe wrapping the geometry with the crs
+    
     """
     return gpd.GeoDataFrame(
         {'geometry' : [geometry]},
@@ -110,7 +113,7 @@ def geom_with_crs(geometry, crs):
 
 
 def find_great_circle_distance(start, end, crs, lat_lon_crs_name="EPSG:4326"):
-    """Finds the great circle distance between two points.
+    """Find the great circle distance between two points.
 
     Parameters
     ----------
@@ -120,16 +123,14 @@ def find_great_circle_distance(start, end, crs, lat_lon_crs_name="EPSG:4326"):
         A second point
     crs : pyproj.CRS
         A coordinate reference system.
+    lat_lon_crs_name : str
+        An identifier for a CRS that gives latitude and longitude.
 
     Returns
     -------
     float
         The great circle distance between the two points.
-
-    Other Parameters
-    ----------------
-    lat_lon_crs_name : str
-        An identifier for a CRS that gives latitude and longitude.
+    
     """
     start_lat_lon = (
         geom_with_crs(start, crs)

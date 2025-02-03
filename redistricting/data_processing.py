@@ -13,6 +13,7 @@ def create_state_data():
     Notes
     -----
     Creates a file.
+
     """
     data_acquisition.ensure_state_population_table()
     data_acquisition.ensure_fips_identifiers()
@@ -75,8 +76,9 @@ def create_country_data():
     """Processs census files to a single country-wide population lookup table.
     
     Notes
-    ----
+    -----
     Creates a file.
+    
     """
     data_acquisition.ensure_state_population_table()
 

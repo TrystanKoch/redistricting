@@ -9,7 +9,7 @@ CONFIG = "config.toml"
 
 
 def ensure_config(config=None):
-    """Ensures a config file is defined.
+    """Ensure a config file is defined.
 
     Check if config dictionary already defined. If so, return that dictionary.
     Otherwise, open config file, read it, and return the new dictionary.
@@ -23,6 +23,7 @@ def ensure_config(config=None):
     -------
     config: dict
         Configuration dictionary
+    
     """
     if not config:
         with open(CONFIG, "rb") as config_file:
@@ -31,7 +32,7 @@ def ensure_config(config=None):
 
 
 def downloads_directory(config=None):
-    """Returns configured downloads directory for project.
+    """Return configured downloads directory for project.
 
     Parameters
     ----------
@@ -42,6 +43,7 @@ def downloads_directory(config=None):
     -------
     str
         Configured directory for project downloads
+    
     """
     config = ensure_config(config)
     directory = os.path.join(
@@ -52,7 +54,7 @@ def downloads_directory(config=None):
 
 
 def state_shapes_directory(config=None):
-    """Returns the directory for the census state shape file.
+    """Return the directory for the census state shape file.
     
     Parameters
     ----------
@@ -63,6 +65,7 @@ def state_shapes_directory(config=None):
     -------
     str
         Configured directory for the state shapes
+    
     """
     config = ensure_config(config)
     directory = os.path.join(
@@ -73,7 +76,7 @@ def state_shapes_directory(config=None):
 
 
 def state_shapes_filename(config=None):
-    """Returns the filename the census state shape file.
+    """Return the filename the census state shape file.
 
     Parameters
     ----------
@@ -84,6 +87,7 @@ def state_shapes_filename(config=None):
     -------
     str
         Configured filename for the state shapes
+    
     """
     config = ensure_config(config)
     filename_template = config["census_urls"]["state_shapes"]["filename_template"]
@@ -95,7 +99,7 @@ def state_shapes_filename(config=None):
 
 
 def state_shapes_url(config=None):
-    """Returns the census URL for the census state shape file.
+    """Return the census URL for the census state shape file.
 
     Parameters
     ----------
@@ -106,6 +110,7 @@ def state_shapes_url(config=None):
     -------
     str
         Configured URL for the Census' state shapes file
+    
     """
     config = ensure_config(config)
     url_directory_template = config["census_urls"]["state_shapes"]["directory_template"]
@@ -129,6 +134,7 @@ def state_shapes_location(config=None):
     -------
     str
         Configured relative pathname for the state shapes
+    
     """
     config = ensure_config(config)
     location = os.path.join(
@@ -139,7 +145,7 @@ def state_shapes_location(config=None):
 
 
 def state_population_directory(config=None):
-    """Returns directory for the census state population file.
+    """Return directory for the census state population file.
     
     Parameters
     ----------
@@ -150,6 +156,7 @@ def state_population_directory(config=None):
     -------
     str
         Configured directory for the state populations
+    
     """
     config = ensure_config(config)
     directory = os.path.join(
@@ -160,7 +167,7 @@ def state_population_directory(config=None):
 
 
 def state_population_filename(config=None):
-    """Return directory for the census state population file.
+    """Return the directory for the census state population file.
 
     Parameters
     ----------
@@ -171,6 +178,7 @@ def state_population_filename(config=None):
     -------
     str
         Configured filename for the state populations
+    
     """
     config = ensure_config(config)
     filename_template = config["census_urls"]["apportionment_population"]\
@@ -182,7 +190,7 @@ def state_population_filename(config=None):
 
 
 def state_population_url(config=None):
-    """Return census url for the census state population file.
+    """Return the census url for the census state population file.
     
     Parameters
     ----------
@@ -193,6 +201,7 @@ def state_population_url(config=None):
     -------
     str
         Configured URL for the Census' state population file
+    
     """
     config = ensure_config(config)
     url_directory_template = config["census_urls"] \
@@ -207,7 +216,7 @@ def state_population_url(config=None):
 
 
 def state_population_location(config=None):
-    """Returns full relative filename for the census state population file.
+    """Return full relative filename for the census state population file.
     
     Parameters
     ----------
@@ -218,6 +227,7 @@ def state_population_location(config=None):
     -------
     str
         Configured relative pathname for the state populations.
+    
     """
     config = ensure_config(config)
     location = os.path.join(
@@ -228,7 +238,7 @@ def state_population_location(config=None):
 
 
 def fips_identifiers_directory(config=None):
-    """Returns directory for the census state FIPS identification file.
+    """Return directory for the census state FIPS identification file.
 
     Parameters
     ----------
@@ -239,6 +249,7 @@ def fips_identifiers_directory(config=None):
     -------
     str
         Configured directory for the state FIPS identification file.
+    
     """
     config = ensure_config(config)
     directory = os.path.join(
@@ -249,7 +260,7 @@ def fips_identifiers_directory(config=None):
 
 
 def fips_identifiers_filename(config=None):
-    """Returns filename for the census state FIPS identification file.
+    """Return filename for the census state FIPS identification file.
 
     Parameters
     ----------
@@ -260,6 +271,7 @@ def fips_identifiers_filename(config=None):
     -------
     str
         Configured filename for the state FIPS identification file
+    
     """
     config = ensure_config(config)
     filename = config["census_urls"]["FIPS_identifiers"]["filename"]
@@ -267,7 +279,7 @@ def fips_identifiers_filename(config=None):
 
 
 def fips_identifiers_url(config=None):
-    """Returns URL for census state FIPS identification file.
+    """Return URL for census state FIPS identification file.
     
     Parameters
     ----------
@@ -278,6 +290,7 @@ def fips_identifiers_url(config=None):
     -------
     str
         Configured URL for the Census' state FIPS identification file
+    
     """
     config = ensure_config(config)
     url_directory = config["census_urls"]["FIPS_identifiers"]["directory"]
@@ -287,7 +300,7 @@ def fips_identifiers_url(config=None):
 
 
 def fips_identifiers_location(config=None):
-    """Returns the relative filename for the state FIPS identification file.
+    """Return the relative filename for the state FIPS identification file.
     
     Parameters
     ----------
@@ -298,6 +311,7 @@ def fips_identifiers_location(config=None):
     -------
     str
         Configured relative pathname for the state FIPS identification file
+    
     """
     config = ensure_config(config)
     location = os.path.join(
@@ -308,7 +322,7 @@ def fips_identifiers_location(config=None):
 
 
 def census_blocks_directory(config=None):
-    """Returns the directory for census block files.
+    """Return the directory for census block files.
 
     Parameters
     ----------
@@ -319,6 +333,7 @@ def census_blocks_directory(config=None):
     -------
     str
         Configured directory for the census block files
+    
     """
     config = ensure_config(config)
     directory = os.path.join(
@@ -329,7 +344,7 @@ def census_blocks_directory(config=None):
 
 
 def census_blocks_filename(fips_id, config=None):
-    """Returns the filename for the census block file of a state.
+    """Return the filename for the census block file of a state.
     
     Parameters
     ----------
@@ -342,6 +357,7 @@ def census_blocks_filename(fips_id, config=None):
     -------
     str
         Configured filename for the census block file
+    
     """
     config = ensure_config(config)
     census_block_config = config["census_urls"]["census_blocks"]
@@ -355,7 +371,7 @@ def census_blocks_filename(fips_id, config=None):
 
 
 def census_blocks_url(fips_id, config=None):
-    """Returns the url for the census block file of a state.
+    """Return the url for the census block file of a state.
 
     Parameters
     ----------
@@ -368,6 +384,7 @@ def census_blocks_url(fips_id, config=None):
     -------
     str
         Configured URL for the Census' block file
+    
     """
     config = ensure_config(config)
     census_block_config = config["census_urls"]["census_blocks"]
@@ -381,8 +398,8 @@ def census_blocks_url(fips_id, config=None):
     return url
 
 
-def census_blocks_location(fips, config=None):
-    """Returns the full relative filename for the census block file of a state.
+def census_blocks_location(fips_id, config=None):
+    """Return the full relative filename for the census block file of a state.
 
     Parameters
     ----------
@@ -395,17 +412,18 @@ def census_blocks_location(fips, config=None):
     -------
     str
         Configured relative pathname for the census block file
+    
     """
     config = ensure_config(config)
     location = os.path.join(
         census_blocks_directory(config),
-        census_blocks_filename(fips, config)
+        census_blocks_filename(fips_id, config)
     )
     return location
 
 
 def state_data_directory(config=None):
-    """Returns directory for processed state population lookup table.
+    """Return directory for processed state population lookup table.
     
     Parameters
     ----------
@@ -416,6 +434,7 @@ def state_data_directory(config=None):
     -------
     str
         Configured directory for the state population lookup table
+    
     """
     config = ensure_config(config)
     directory = os.path.join(
@@ -426,7 +445,7 @@ def state_data_directory(config=None):
 
 
 def state_data_filename(config=None):
-    """Returns filename for processed state population lookup table.
+    """Return filename for processed state population lookup table.
     
     Parameters
     ----------
@@ -437,6 +456,7 @@ def state_data_filename(config=None):
     -------
     str
         Configured filename for the state population lookup table
+    
     """
     config = ensure_config(config)
     filename = os.path.join(
@@ -445,7 +465,7 @@ def state_data_filename(config=None):
     return filename
 
 def state_data_location(config=None):
-    """Returns relative filename for processed state population lookup table.
+    """Return relative filename for processed state population lookup table.
     
     Parameters
     ----------
@@ -456,6 +476,7 @@ def state_data_location(config=None):
     -------
     str
         Configured relative pathname for the state population lookup table
+    
     """
     config = ensure_config(config)
     location = os.path.join(
@@ -466,7 +487,7 @@ def state_data_location(config=None):
 
 
 def country_data_directory(config=None):
-    """Returns directory for processed US population lookup table.
+    """Return directory for processed US population lookup table.
     
     Parameters
     ----------
@@ -477,6 +498,7 @@ def country_data_directory(config=None):
     -------
     str
         Configured directory for the US population lookup table
+    
     """
     config = ensure_config(config)
     directory = os.path.join(
@@ -487,7 +509,7 @@ def country_data_directory(config=None):
 
 
 def country_data_filename(config=None):
-    """Returns filename for processed US population lookup table.
+    """Return filename for processed US population lookup table.
     
     Parameters
     ----------
@@ -498,6 +520,7 @@ def country_data_filename(config=None):
     -------
     str
         Configured filename for the US population lookup table
+    
     """
     config = ensure_config(config)
     filename = os.path.join(
@@ -507,7 +530,7 @@ def country_data_filename(config=None):
 
 
 def country_data_location(config=None):
-    """Returns relative filename for processed US population lookup table.
+    """Return relative filename for processed US population lookup table.
     
     Parameters
     ----------
@@ -518,6 +541,7 @@ def country_data_location(config=None):
     -------
     str
         Configured relative pathname for the state population lookup table
+    
     """
     config = ensure_config(config)
     location = os.path.join(

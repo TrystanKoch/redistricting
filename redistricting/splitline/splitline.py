@@ -7,7 +7,7 @@ from . import spherical_geometry
 
 
 def horizontal_splitter(region_block_centroids, max_small_district_population):
-    """Splits a region in two, by population, horizontally.
+    """Split a region in two, by population, horizontally.
 
     Splits a region into two, horizontally. The smaller region will have a 
     population that is as large as possible while still being less than a 
@@ -24,6 +24,7 @@ def horizontal_splitter(region_block_centroids, max_small_district_population):
     -------
     pandas.core.frame.DataFrame
         A mask that is true for all blocks part of the smaller region
+    
     """
     # This naive test function only splits the state in horizontal lines.
     # Because of this, the angular step is always 0, corresponding to
@@ -67,8 +68,8 @@ def split_district(cb_blocks, region_mask, num_districts, district_count):
         The total number of districts we want to split the state into
     district_count : int
         The number of districts we have created so far
+    
     """
-
     # Find the total population of the district
     total_population = cb_blocks.mask(~region_mask)["POP20"].sum()
 
@@ -124,7 +125,7 @@ def split_district(cb_blocks, region_mask, num_districts, district_count):
 
 
 def split_state(block_centroids, num_districts):
-    """Splits census blocks into districts of almost equal population.
+    """Split census blocks into districts of almost equal population.
 
     Recursively splits a region into districts of equal population in place.
 
@@ -134,6 +135,7 @@ def split_state(block_centroids, num_districts):
         A (mutating!) set of census blocks
     num_districts: int
         Total number of districts to divide the region into
+    
     """
     district_count = 0
     region_mask = block_centroids["district"].notna()
@@ -141,7 +143,7 @@ def split_state(block_centroids, num_districts):
 
 
 def get_splitline_length(shape, p, theta, crs):
-    """Returns the great_circle length of a splitline.
+    """Return the great_circle length of a splitline.
 
     Parameters
     ----------
@@ -167,6 +169,7 @@ def get_splitline_length(shape, p, theta, crs):
     The distance is returned in the units of the crs that we pass in. For
     this project, this is assumed to be meters, though nothing here will
     rely on that assumption.
+
     """
     boundary_p1, boundary_p2 = flat_geometry.boundary_intersection_points(
         shape, p, theta
@@ -177,7 +180,7 @@ def get_splitline_length(shape, p, theta, crs):
 
 
 def angle_splitter(region_block_centroids, max_small_district_population, step):
-    r"""Splits a region in two, by population, with a line at a given angle.
+    r"""Split a region in two, by population, with a line at a given angle.
 
     Splits a region into two. The smaller region will have a population that is
     as large as possible while still being less than a given population. The
@@ -206,6 +209,7 @@ def angle_splitter(region_block_centroids, max_small_district_population, step):
 
     where :math:`n` is the step number and :math:`N` is the total number of
     steps.
+
     """
     return (
         # This should be one of our cleaned centroid blocks.
@@ -228,7 +232,7 @@ def angle_splitter(region_block_centroids, max_small_district_population, step):
 
 
 def find_splitline_point(block_centroids, small_mask, step):
-    """Determine a point on which to base a splitline,
+    """Determine a point on which to base a splitline.
 
     Parameters
     ----------
@@ -243,6 +247,7 @@ def find_splitline_point(block_centroids, small_mask, step):
     -------
     shapely.geometry.Point
         A point on the splitline between the regions.
+    
     """
     last_small_idx = (
         # For all the centroids

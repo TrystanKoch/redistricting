@@ -3,7 +3,7 @@
 import geopandas as gpd
 
 def census_block_centroids(census_blocks, gnomonic_crs):
-    """Turns the Census' very large dataframe into a more usable dataframe.
+    """Turn the Census' very large dataframe into a more usable dataframe.
 
     Specifically, all of our processing will only require a central internal
     point of each block, so we change the geometry of our census block data
@@ -23,6 +23,7 @@ def census_block_centroids(census_blocks, gnomonic_crs):
     -------
     geopandas.geodataframe.GeoDataFrame
         Census_block centroids with GEOID, population, and gnomonic locations
+    
     """
     census_crs = census_blocks.crs
     return (
@@ -64,7 +65,7 @@ def census_block_centroids(census_blocks, gnomonic_crs):
 
 
 def state_boundary(state_shape):
-    """Finds the boundary of a given state from its geographical shape.
+    """Find the boundary of a given state from its geographical shape.
 
     Parameters
     ----------
@@ -75,12 +76,13 @@ def state_boundary(state_shape):
     -------
     geopandas.geodataframe.GeoDataFrame
         Boundary information for a state
+    
     """
     return state_shape.geometry.boundary
 
 
 def apportionment_drop_pr(states):
-    """Drops Puerto Rico from a list of 'state' populations.
+    """Drop Puerto Rico from a list of 'state' populations.
 
     Parameters
     ----------
@@ -89,6 +91,7 @@ def apportionment_drop_pr(states):
     
     pandas.core.frame.DataFrame
         Cleaned state populations table without Puerto Rico
+    
     """
     return (
         states
@@ -97,7 +100,7 @@ def apportionment_drop_pr(states):
 
 
 def apportionment_drop_dc(states):
-    """ Drops DC from a list of 'state' populations.
+    """Drop DC from a list of 'state' populations.
 
     Parameters
     ----------
@@ -108,6 +111,7 @@ def apportionment_drop_dc(states):
     -------
     pandas.core.frame.DataFrame
         Cleaned state populations table without DC
+    
     """
     return (
         states
