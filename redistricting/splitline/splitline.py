@@ -460,8 +460,8 @@ def find_min_splitline_step(
     # population choose a point in the smaller region from the masked centroids
     # dataframe.
     small_test_point = shapely.Point(
-        region_block_centroids.loc[min_mask].iloc[0].x,
-        region_block_centroids.loc[min_mask].iloc[0].x
+        region_block_centroids.loc[min_mask].iloc[10].x,
+        region_block_centroids.loc[min_mask].iloc[10].y
     )
 
     # This if-else block ensures that the min mask corresponds to the
