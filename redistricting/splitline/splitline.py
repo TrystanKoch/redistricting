@@ -1,10 +1,12 @@
 """For splitting regions into districts recursively."""
 
 import shapely
+import numpy as np
 
 from . import flat_geometry
 from . import spherical_geometry
-
+from .. import data_loading
+from .. import data_cleaning
 
 def horizontal_splitter(region_block_centroids, max_small_district_population):
     """Split a region in two, by population, horizontally.
@@ -52,7 +54,13 @@ def horizontal_splitter(region_block_centroids, max_small_district_population):
     )
 
 
-def split_district(cb_blocks, region_mask, num_districts, district_count):
+def split_district(
+        cb_blocks,
+        region_mask,
+        num_districts,
+        district_count,
+        region_shape
+    ):
     """Recursively split a region into districts of almost equal population.
 
     Recursively split a region into districts with populations in proportion
@@ -99,18 +107,20 @@ def split_district(cb_blocks, region_mask, num_districts, district_count):
     # Split the district with a splitting function.
     # Note that we assume our function returns a mask for the smaller of the
     # two regions.
-    small_district_mask = angle_splitter(
-        cb_blocks.mask(~region_mask),
-        small_district_population,
-        step=3
-    )
+    small_district_mask, small_district_shape, big_district_shape = \
+        find_min_splitline_step(
+            cb_blocks.mask(~region_mask),
+            small_district_population,
+            region_shape
+        )
 
     # Recurse using the smaller district.
     district_count = split_district(
         cb_blocks,
         small_district_mask,
         small_district_divisions,
-        district_count
+        district_count,
+        small_district_shape
     )
 
     # Recurse using the larger district.
@@ -118,13 +128,18 @@ def split_district(cb_blocks, region_mask, num_districts, district_count):
         cb_blocks,
         region_mask & ~small_district_mask,
         large_district_divisions,
-        district_count
+        district_count,
+        big_district_shape
     )
 
     return district_count
 
 
-def split_state(block_centroids, num_districts):
+def min_length_split_state_with_shape(
+        block_centroids,
+        num_districts,
+        state_shape
+    ):
     """Split census blocks into districts of almost equal population.
 
     Recursively splits a region into districts of equal population in place.
@@ -139,7 +154,13 @@ def split_state(block_centroids, num_districts):
     """
     district_count = 0
     region_mask = block_centroids["district"].notna()
-    split_district(block_centroids, region_mask, num_districts, district_count)
+    split_district(
+        block_centroids,
+        region_mask,
+        num_districts,
+        district_count,
+        state_shape
+    )
 
 
 def get_splitline_length(shape, p, theta, crs):
@@ -295,3 +316,218 @@ def find_splitline_point(block_centroids, small_mask, step):
         (p1_df.x + p2_df.x) / 2,
         (p1_df.y + p2_df.y) / 2
     )
+
+
+def get_split_shapes(shape, p, theta):
+    """Split a geometric shape by a line.
+
+    Parameters
+    ----------
+    shape : shapely.Polygon
+        Polygon for the region
+    p : shapely.Point
+        Point on the splitline
+    theta : float
+        Angle in radians between splitline and horizonal
+
+    Returns
+    -------
+    subshape_! : shapely.Polygon
+        First Subregion
+    subshape_2 : shapely.Polygon
+        Second Subregion
+
+    """
+    splitline = flat_geometry.point_angle_line(p, theta)
+    subshapes = shapely.ops.split(shape, splitline)
+
+    subshape_1 = subshapes.geoms[0]
+    subshape_2 = subshapes.geoms[1]
+
+    return subshape_1, subshape_2
+
+
+def split_region_shape(region, p, theta):
+    """Split a region's dataframe into two by a splitline.
+
+    Parameters
+    ----------
+    shape : gpd.GeoDataFrame
+        Dataframe containg the polygon for the region
+    p : shapely.Point
+        Point on the splitline
+    theta : float
+        Angle in radians between splitline and horizonal
+
+    Returns
+    -------
+    split_length : float
+
+    region_1 : geopandas.DataFrame
+        The first subregion of the input region
+    region_2 : geopandas.DataFrame
+        The second subregion of the input region
+    """
+    shape = region.geometry.iloc[0]
+    crs = region.crs
+
+    subshape_1, subshape_2 = get_split_shapes(shape, p, theta)
+    split_length = get_splitline_length(shape, p, theta, crs)
+
+    region_1 = spherical_geometry.geom_with_crs(subshape_1, crs)
+    region_2 = spherical_geometry.geom_with_crs(subshape_2, crs)
+
+    return split_length, region_1, region_2
+
+
+def find_min_splitline_step(
+        region_block_centroids,
+        max_small_district_population,
+        state_shape
+    ):
+    """Recursive step for splitting the regions by the shortest splitline.
+
+    Parameters
+    ----------
+    region_block_centroids : gpd.GeoDataFrame
+        A dataframe containing the census data and directed distances.
+    max_small_district_population : int
+        A population cutoff for the smaller sub-region.
+    state_shape : gpd.GeoDataFrame
+        A dataframe containing our region's polygon
+
+    Returns
+    -------
+    min_mask : pd.DataFrame
+        A mask for a region containing the max_small_district_population
+    min_subregion1 : gpd.GeoDataFrame
+        The subregion of our state_shape that corresponds to the mask
+    min_subregion2 : gpd.GeoDataFrame
+        The complement of min_subregion1
+
+    """
+    # Initialize the values for the loop. We always need to consider the first
+    # length we find, so we compare it to infinity.
+    min_mask = None
+    min_length = np.inf
+
+    # The total number of steps is something we should pass down in the future,
+    # but for now, we can read this information directly from the last column
+    # of the region block centroid data frame.
+    total_steps = int(region_block_centroids.columns[-1]) + 1
+
+    # Iterate over all angular steps around a full revolution.
+    for step in range(total_steps):
+        # For each angular step, we want to break up the current region into
+        # two regions. This splitline will be in the direction of that angular
+        # step, and will go through the last point int he small region.
+        small_mask = angle_splitter(
+            region_block_centroids,
+            max_small_district_population,
+            step
+        )
+        # We will need that point
+        p = find_splitline_point(region_block_centroids, small_mask, step)
+
+        # We have been talking in terms of angular steps, but our shape
+        # splitting algorithm uses angles in radians.
+        theta = step/total_steps*np.pi*2
+
+        # TODO: Remove the try-except-else statement.
+        # This is currently here because the algorithm does not check whether
+        # our small mask corresponds to the small region shape. That is a
+        # serious bug! Note: bug fixed, but try kept for now.
+        try:
+            # Split the region shape by the splitline through the point p at
+            # the angle theta. The length of that line is given here.
+            length, subregion1, subregion2 = split_region_shape(
+                state_shape,
+                p,
+                theta
+            )
+        except IndexError:
+            print("Oops: a region got passed wrong.")
+        else:
+            # Finally, store the information if we have found the shortest
+            # splitline so far.
+            if length < min_length:
+                min_mask = small_mask
+                min_length = length
+                min_subregion1 = subregion1
+                min_subregion2 = subregion2
+
+    # To ensure that the first returned shape is the region with the smaller
+    # population choose a point in the smaller region from the masked centroids
+    # dataframe.
+    small_test_point = shapely.Point(
+        region_block_centroids.loc[min_mask].iloc[0].x,
+        region_block_centroids.loc[min_mask].iloc[0].x
+    )
+
+    # This if-else block ensures that the min mask corresponds to the
+    # min_subregion1 dataframe.
+    if shapely.within(small_test_point, min_subregion1.geometry.iloc[0]):
+        return min_mask, min_subregion1, min_subregion2
+    elif shapely.within(small_test_point, min_subregion2.geometry.iloc[0]):
+        return min_mask, min_subregion2, min_subregion1
+    else:
+        #print("  Warning: check point isn't in either subregion. Defualting.")
+        return min_mask, min_subregion1, min_subregion2
+
+
+def min_length_split_state(fips_id, dist_count, steps=60):
+    """Split a state's census blocks using minimum distance splitlines.
+
+    Parameters
+    ----------
+    fips_id : int
+        The FIPS identification number for the state
+    dist_count : int
+        The number of districts to split the state into
+    steps : int
+        The number of angular steps to take while finding minimum splitlines
+
+    Returns
+    -------
+    geopandas.GeoDataFrame
+        The original census block table with district labels added
+
+    """
+    # Get the correct state polygon, use it to create a gnomonic crs, then
+    # change the shape into the new crs.
+    state_shape = data_loading.load_state_shape(fips_id)
+    state_centered_gnomonic_crs = spherical_geometry.centered_gnomonic_crs(
+        state_shape
+    )
+    g_state_shape = state_shape.to_crs(state_centered_gnomonic_crs)
+
+    # Load the census blocks, ensure they are in the gnomonic crs, then
+    # create directed distances for each angular step around a revolution.
+    census_blocks_raw = data_loading.load_state_census_blocks(fips_id)
+    block_centroids = data_cleaning.census_block_centroids(
+        census_blocks_raw,
+        state_centered_gnomonic_crs
+    )
+    block_centroid_dots = flat_geometry.position_dot_products(
+        block_centroids,
+        steps
+    )
+
+    # Do all the work! Recursively split the state with minumum length
+    # splitlines with approximately equal populations.
+    # Note: block_centroid_dots is mutating here.
+    min_length_split_state_with_shape(
+        block_centroid_dots,
+        dist_count,
+        g_state_shape
+    )
+
+    # We want to get rid of all unneccessary processing information anda pply
+    # our new districts directly to the original census information.
+    districted_census_blocks = census_blocks_raw.merge(
+        block_centroid_dots[["GEOID20", "district"]],
+        on="GEOID20",
+        how="right"
+    )
+
+    return districted_census_blocks
