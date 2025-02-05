@@ -23,8 +23,6 @@ def parse_state(state_arg, state_df):
         A dataframe where we can look up a state's FIPS id
 
     """
-    state_arg = " ".join(state_arg)
-
     if state_arg.isdigit() and len(state_arg) <= FIPS_LEN:
         state_entry = state_df[state_df[FIPS] == int(state_arg)]
     elif len(state_arg) == FIPS_LEN:
