@@ -2,7 +2,10 @@
 
 import math
 
+from typing import cast
+
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
 import shapely
 
@@ -29,8 +32,7 @@ def theta_from_steps(step: int, total_steps: int) -> float:
     return (2 * np.pi) * (step / total_steps)
 
 
-
-def line_normal(theta: float) -> np.ndarray:
+def line_normal(theta: float) -> npt.NDArray[np.float64]:
     """Return a 2D line's unit normal vector.
 
     A 2D unit vector that is normal to a line at an angle of theta radians
@@ -53,7 +55,7 @@ def line_normal(theta: float) -> np.ndarray:
     ])
 
 
-def line_tangent(theta: float) -> np.ndarray:
+def line_tangent(theta: float) -> npt.NDArray[np.float64]:
     """Return a 2D line's unit tangent vector.
 
     A 2D unit vector that is tangent to a line at an angle of theta radians
@@ -185,7 +187,7 @@ def point_angle_line(
 
 def directed_distance(
         p: shapely.Point,
-        t: np.ndarray[float]
+        t: npt.NDArray[np.float64]
     ) -> float:
     """Dot product of the point's position vector with a vector.
 
@@ -207,13 +209,13 @@ def directed_distance(
     speaking, this is not necessary.
 
     """
-    return p.x*t[0] + p.y*t[1]
-
-
+    tx = cast(float, t[0])
+    ty = cast(float, t[1])
+    return p.x*tx + p.y*ty
 
 
 def boundary_intersection_points(
-        shape: shapely.Geometry,
+        shape: shapely.Polygon,
         p: shapely.Point,
         theta: float
     ) -> tuple[shapely.Point, shapely.Point]:
@@ -258,7 +260,11 @@ def boundary_intersection_points(
     min_idx = 0
     idx = 0
 
-    for point in intersections.geoms:
+    if not isinstance(intersections,shapely.MultiPoint):
+        raise ValueError("Boundary not intersected.")
+    geometries = intersections.geoms
+
+    for point in geometries:
         d = directed_distance(point, t)
         if d < min_d:
             min_d = d
@@ -268,8 +274,8 @@ def boundary_intersection_points(
             max_idx = idx
         idx += 1
 
-    start_point = intersections.geoms[min_idx]
-    end_point = intersections.geoms[max_idx]
+    start_point = geometries[min_idx]
+    end_point = geometries[max_idx]
 
     return start_point, end_point
 
