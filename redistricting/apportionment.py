@@ -3,6 +3,8 @@
 from enum import StrEnum
 from math import sqrt
 
+from pandas import DataFrame
+
 from . import data_loading
 from . import data_cleaning
 
@@ -16,12 +18,12 @@ class ApportionmentMethod(StrEnum):
 
 
 def apportion_representatives(
-        min_total_reps=435,
-        min_state_reps=1,
-        include_dc=False,
-        include_pr=False,
-        method=ApportionmentMethod.HHILL
-    ):
+        min_total_reps: int = 435,
+        min_state_reps: int = 1,
+        include_dc: bool = False,
+        include_pr: bool = False,
+        method: ApportionmentMethod = ApportionmentMethod.HHILL
+    ) -> DataFrame:
     """Apportion US Representatives to the states.
 
     Parameters
@@ -36,6 +38,11 @@ def apportion_representatives(
         Whether to apportion representatives to Puerto Rico
     method : ApportionmentMethod
         Representative apportionment method
+
+    Returns
+    -------
+    pandas.DataFrame
+        A table of states with representatives appropriately apportioned.
 
     """
     states = data_loading.load_state_data()
@@ -55,8 +62,11 @@ def apportion_representatives(
         return huntington_hill(states, min_total_reps, min_state_reps)
 
 
-
-def huntington_hill(population_df, min_total_reps, min_state_reps=1):
+def huntington_hill(
+        population_df: DataFrame,
+        min_total_reps: int,
+        min_state_reps: int = 1
+    ) -> DataFrame:
     """Apportion representatives by Huntington-Hill method.
 
     Note that there will always be at least one representative per state.
@@ -69,6 +79,11 @@ def huntington_hill(population_df, min_total_reps, min_state_reps=1):
         Least number of representatives to apportion
     min_state_reps : int
         Least allowable number of representatives in one state
+
+    Returns
+    -------
+    pandas.DataFrame
+        A dataframe of states with representatives appropriately apportioned.
 
     """
     tmp_df = population_df.copy()
