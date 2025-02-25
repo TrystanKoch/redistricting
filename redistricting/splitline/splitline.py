@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import cast
+
 import shapely.ops
 import numpy as np
 import geopandas as gpd
@@ -119,9 +121,10 @@ def split_district(
     # Split the district with a splitting function.
     # Note that we assume our function returns a mask for the smaller of the
     # two regions.
+    cur_region = cast(gpd.GeoDataFrame, cb_blocks.mask(~region_mask))
     small_district_mask, small_district_shape, big_district_shape = \
         find_min_splitline_step(
-            cb_blocks.mask(~region_mask),
+            cur_region,
             small_district_population,
             region_shape
         )
@@ -176,7 +179,7 @@ def min_length_split_state_with_shape(
 
 
 def get_splitline_length(
-        shape: shapely.Geometry,
+        shape: shapely.Polygon,
         p: shapely.Point,
         theta: float,
         crs: pyproj.CRS
@@ -185,7 +188,7 @@ def get_splitline_length(
 
     Parameters
     ----------
-    shape : shapely.Geometry
+    shape : shapely.Polygon
         The shape corresponding to a region to be split
     p : shapely.geometry.Point
         A point on the splitline
@@ -326,6 +329,9 @@ def find_splitline_point(
         .idxmin(axis=0)
     )
 
+    if isinstance(last_small_idx, str) or isinstance(first_big_idx, str):
+        raise ValueError
+
     # Find the GeoSeries that correspond to these points
     p1_df = block_centroids.iloc[last_small_idx]
     p2_df = block_centroids.iloc[first_big_idx]
@@ -369,6 +375,12 @@ def get_split_shapes(
     subshape_1 = subshapes.geoms[0]
     subshape_2 = subshapes.geoms[1]
 
+    if not (
+        isinstance(subshape_1, shapely.Polygon)
+        and isinstance(subshape_2, shapely.Polygon)
+    ):
+        raise TypeError
+
     return subshape_1, subshape_2
 
 
@@ -400,6 +412,12 @@ def split_region_shape(
     shape = region.geometry.iloc[0]
     crs = region.crs
 
+    if not isinstance(shape, shapely.Polygon):
+        raise TypeError
+
+    if crs is None:
+        raise ValueError
+
     subshape_1, subshape_2 = get_split_shapes(shape, p, theta)
     split_length = get_splitline_length(shape, p, theta, crs)
 
@@ -413,7 +431,7 @@ def find_min_splitline_step(
         region_block_centroids: gpd.GeoDataFrame,
         max_small_district_population: int,
         state_shape: gpd.GeoDataFrame
-    ) -> tuple[pd.Series, gpd.GeoDataFrame, gpd.GeoDataFrame]:
+    ) -> tuple[pd.Series[bool], gpd.GeoDataFrame, gpd.GeoDataFrame]:
     """Recursive step for splitting the regions by the shortest splitline.
 
     Parameters
@@ -438,6 +456,8 @@ def find_min_splitline_step(
     # Initialize the values for the loop. We always need to consider the first
     # length we find, so we compare it to infinity.
     min_mask = None
+    min_subregion1 = None
+    min_subregion2 = None
     min_length = np.inf
 
     # The total number of steps is something we should pass down in the future,
@@ -462,7 +482,7 @@ def find_min_splitline_step(
         # splitting algorithm uses angles in radians.
         theta = step/total_steps*np.pi*2
 
-        # TODO: Remove the try-except-else statement.
+        # possible todo: Remove the try-except-else statement.
         # This is currently here because the algorithm does not check whether
         # our small mask corresponds to the small region shape. That is a
         # serious bug! Note: bug fixed, but try kept for now.
@@ -484,6 +504,11 @@ def find_min_splitline_step(
                 min_length = length
                 min_subregion1 = subregion1
                 min_subregion2 = subregion2
+
+    if min_mask is None:
+        raise ValueError
+    if min_subregion1 is None or min_subregion2 is None:
+        raise ValueError
 
     # To ensure that the first returned shape is the region with the smaller
     # population choose a point in the smaller region from the masked centroids
@@ -546,6 +571,9 @@ def min_length_split_state(
         steps
     )
 
+    if not isinstance(block_centroid_dots, gpd.GeoDataFrame):
+        raise TypeError
+
     # Do all the work! Recursively split the state with minumum length
     # splitlines with approximately equal populations.
     # Note: block_centroid_dots is mutating here.
@@ -562,5 +590,8 @@ def min_length_split_state(
         on="GEOID20",
         how="right"
     )
+
+    if not isinstance(districted_census_blocks, gpd.GeoDataFrame):
+        raise TypeError
 
     return districted_census_blocks
