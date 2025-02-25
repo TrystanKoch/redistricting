@@ -1,5 +1,7 @@
 """For splitting regions into districts recursively."""
 
+from __future__ import annotations
+
 import shapely.ops
 import numpy as np
 import geopandas as gpd
@@ -14,7 +16,7 @@ from .. import data_cleaning
 def horizontal_splitter(
         region_block_centroids: pd.DataFrame,
         max_small_district_population: int
-    ) -> pd.Series:
+    ) -> pd.Series[bool]:
     """Split a region in two, by population, horizontally.
 
     Splits a region into two, horizontally. The smaller region will have a
@@ -62,7 +64,7 @@ def horizontal_splitter(
 
 def split_district(
         cb_blocks: gpd.GeoDataFrame,
-        region_mask: pd.Series,
+        region_mask: pd.Series[bool],
         num_districts: int,
         district_count: int,
         region_shape: gpd.GeoDataFrame
@@ -219,7 +221,7 @@ def angle_splitter(
         region_block_centroids: pd.DataFrame,
         max_small_district_population: int,
         step: int
-    ) -> pd.Series:
+    ) -> pd.Series[bool]:
     r"""Split a region in two, by population, with a line at a given angle.
 
     Splits a region into two. The smaller region will have a population that is
@@ -273,7 +275,7 @@ def angle_splitter(
 
 def find_splitline_point(
         block_centroids: gpd.GeoDataFrame,
-        small_mask: pd.Series,
+        small_mask: pd.Series[bool],
         step: int
     ) -> shapely.Point:
     """Determine a point on which to base a splitline.
