@@ -1,14 +1,20 @@
 """For splitting regions into districts recursively."""
 
-import shapely
+import shapely.ops
 import numpy as np
+import geopandas as gpd
+import pandas as pd
+import pyproj
 
 from . import flat_geometry
 from . import spherical_geometry
 from .. import data_loading
 from .. import data_cleaning
 
-def horizontal_splitter(region_block_centroids, max_small_district_population):
+def horizontal_splitter(
+        region_block_centroids: pd.DataFrame,
+        max_small_district_population: int
+    ) -> pd.Series:
     """Split a region in two, by population, horizontally.
 
     Splits a region into two, horizontally. The smaller region will have a
@@ -55,12 +61,12 @@ def horizontal_splitter(region_block_centroids, max_small_district_population):
 
 
 def split_district(
-        cb_blocks,
-        region_mask,
-        num_districts,
-        district_count,
-        region_shape
-    ):
+        cb_blocks: gpd.GeoDataFrame,
+        region_mask: pd.Series,
+        num_districts: int,
+        district_count: int,
+        region_shape: gpd.GeoDataFrame
+    ) -> int:
     """Recursively split a region into districts of almost equal population.
 
     Recursively split a region into districts with populations in proportion
@@ -77,6 +83,10 @@ def split_district(
     district_count : int
         The number of districts we have created so far
 
+    Returns
+    -------
+    int
+        District count after running the function.
     """
     # Find the total population of the district
     total_population = cb_blocks.mask(~region_mask)["POP20"].sum()
@@ -136,10 +146,10 @@ def split_district(
 
 
 def min_length_split_state_with_shape(
-        block_centroids,
-        num_districts,
-        state_shape
-    ):
+        block_centroids: gpd.GeoDataFrame,
+        num_districts: int,
+        state_shape: gpd.GeoDataFrame
+    ) -> None:
     """Split census blocks into districts of almost equal population.
 
     Recursively splits a region into districts of equal population in place.
@@ -154,7 +164,7 @@ def min_length_split_state_with_shape(
     """
     district_count = 0
     region_mask = block_centroids["district"].notna()
-    split_district(
+    _ = split_district(
         block_centroids,
         region_mask,
         num_districts,
@@ -163,7 +173,12 @@ def min_length_split_state_with_shape(
     )
 
 
-def get_splitline_length(shape, p, theta, crs):
+def get_splitline_length(
+        shape: shapely.Geometry,
+        p: shapely.Point,
+        theta: float,
+        crs: pyproj.CRS
+    ) -> float:
     """Return the great_circle length of a splitline.
 
     Parameters
@@ -201,10 +216,10 @@ def get_splitline_length(shape, p, theta, crs):
 
 
 def angle_splitter(
-        region_block_centroids,
-        max_small_district_population,
-        step
-    ):
+        region_block_centroids: pd.DataFrame,
+        max_small_district_population: int,
+        step: int
+    ) -> pd.Series:
     r"""Split a region in two, by population, with a line at a given angle.
 
     Splits a region into two. The smaller region will have a population that is
@@ -256,7 +271,11 @@ def angle_splitter(
     )
 
 
-def find_splitline_point(block_centroids, small_mask, step):
+def find_splitline_point(
+        block_centroids: gpd.GeoDataFrame,
+        small_mask: pd.Series,
+        step: int
+    ) -> shapely.Point:
     """Determine a point on which to base a splitline.
 
     Parameters
@@ -318,7 +337,11 @@ def find_splitline_point(block_centroids, small_mask, step):
     )
 
 
-def get_split_shapes(shape, p, theta):
+def get_split_shapes(
+        shape: shapely.Polygon,
+        p: shapely.Point,
+        theta: float
+    ) -> tuple[shapely.Polygon, shapely.Polygon]:
     """Split a geometric shape by a line.
 
     Parameters
@@ -347,7 +370,11 @@ def get_split_shapes(shape, p, theta):
     return subshape_1, subshape_2
 
 
-def split_region_shape(region, p, theta):
+def split_region_shape(
+        region: gpd.GeoDataFrame,
+        p: shapely.Point,
+        theta: float
+    ) -> tuple[float, gpd.GeoDataFrame, gpd.GeoDataFrame]:
     """Split a region's dataframe into two by a splitline.
 
     Parameters
@@ -381,10 +408,10 @@ def split_region_shape(region, p, theta):
 
 
 def find_min_splitline_step(
-        region_block_centroids,
-        max_small_district_population,
-        state_shape
-    ):
+        region_block_centroids: gpd.GeoDataFrame,
+        max_small_district_population: int,
+        state_shape: gpd.GeoDataFrame
+    ) -> tuple[pd.Series, gpd.GeoDataFrame, gpd.GeoDataFrame]:
     """Recursive step for splitting the regions by the shortest splitline.
 
     Parameters
@@ -475,7 +502,11 @@ def find_min_splitline_step(
         return min_mask, min_subregion1, min_subregion2
 
 
-def min_length_split_state(fips_id, dist_count, steps=60):
+def min_length_split_state(
+        fips_id: int,
+        dist_count: int,
+        steps: int = 60
+    ) -> gpd.GeoDataFrame:
     """Split a state's census blocks using minimum distance splitlines.
 
     Parameters

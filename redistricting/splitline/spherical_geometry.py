@@ -5,8 +5,9 @@ import math
 
 import geopandas as gpd
 import pyproj
+import shapely
 
-def centered_gnomonic_crs(shape):
+def centered_gnomonic_crs(shape: gpd.GeoDataFrame) -> pyproj.CRS:
     """Create gnomonic coordinate reference system around a point.
 
     Creates a gnomonic CRS centered at a geographic shape's approximate
@@ -41,7 +42,7 @@ def centered_gnomonic_crs(shape):
     )
 
 
-def aeqd_from_point(p):
+def aeqd_from_point(p: shapely.Point) -> pyproj.CRS:
     """Create an Azimuthal Equidistand CRS centered at a point.
 
     Parameters
@@ -67,7 +68,7 @@ def aeqd_from_point(p):
     )
 
 
-def distance_to_aeqd_point(p):
+def distance_to_aeqd_point(p: shapely.Point) -> float:
     """Compute a distance between a point and the origin.
 
     Parameters
@@ -90,7 +91,10 @@ def distance_to_aeqd_point(p):
     return math.sqrt(p.x*p.x + p.y*p.y)
 
 
-def geom_with_crs(geometry, crs):
+def geom_with_crs(
+        geometry: shapely.Geometry,
+        crs: pyproj.CRS
+    ) -> gpd.GeoDataFrame:
     """Convert a shapely geometry back to a geodataframe.
 
     Parameters
@@ -112,7 +116,12 @@ def geom_with_crs(geometry, crs):
     )
 
 
-def find_great_circle_distance(start, end, crs, lat_lon_crs_name="EPSG:4326"):
+def find_great_circle_distance(
+        start: shapely.Point,
+        end: shapely.Point,
+        crs: pyproj.CRS,
+        lat_lon_crs_name: str = "EPSG:4326"
+    ) -> float:
     """Find the great circle distance between two points.
 
     Parameters

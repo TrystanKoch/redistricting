@@ -7,7 +7,7 @@ import pandas as pd
 import shapely
 
 
-def theta_from_steps(step, total_steps):
+def theta_from_steps(step: int, total_steps: int) -> float:
     """Convert angular steps to radians.
 
     Gives the angle in radians swept out by "step" steps if a full revolution
@@ -30,7 +30,7 @@ def theta_from_steps(step, total_steps):
 
 
 
-def line_normal(theta):
+def line_normal(theta: float) -> np.ndarray:
     """Return a 2D line's unit normal vector.
 
     A 2D unit vector that is normal to a line at an angle of theta radians
@@ -53,7 +53,7 @@ def line_normal(theta):
     ])
 
 
-def line_tangent(theta):
+def line_tangent(theta: float) -> np.ndarray:
     """Return a 2D line's unit tangent vector.
 
     A 2D unit vector that is tangent to a line at an angle of theta radians
@@ -76,7 +76,10 @@ def line_tangent(theta):
     ])
 
 
-def position_dot_products(df_, total_steps):
+def position_dot_products(
+        df_: pd.DataFrame,
+        total_steps: int
+    ) -> pd.DataFrame:
     """Find many directed positions for all points in a dataframe.
 
     Finds the dot products of the position vector (x,y) with the line
@@ -125,7 +128,7 @@ def position_dot_products(df_, total_steps):
     return df_
 
 
-def sort_by_angle_step(df_, n):
+def sort_by_angle_step(df_: pd.DataFrame, n: int) -> pd.DataFrame:
     """Sort a dataframe by a column of directed distances.
 
     Sorts a dataframe by the column representing a particular angular step's
@@ -147,7 +150,11 @@ def sort_by_angle_step(df_, n):
     return df_.sort_values([str(n)])
 
 
-def point_angle_line(p, theta, length=2_000_000):
+def point_angle_line(
+        p: shapely.Point,
+        theta: float,
+        length: float = 2_000_000
+    ) -> shapely.LineString:
     """Create a long line from a point and an azimuthal angle.
 
     Parameters
@@ -176,7 +183,10 @@ def point_angle_line(p, theta, length=2_000_000):
     ])
 
 
-def directed_distance(p, t):
+def directed_distance(
+        p: shapely.Point,
+        t: np.ndarray[float]
+    ) -> float:
     """Dot product of the point's position vector with a vector.
 
     Parameters
@@ -200,7 +210,13 @@ def directed_distance(p, t):
     return p.x*t[0] + p.y*t[1]
 
 
-def boundary_intersection_points(shape, p, theta):
+
+
+def boundary_intersection_points(
+        shape: shapely.Geometry,
+        p: shapely.Point,
+        theta: float
+    ) -> tuple[shapely.Point, shapely.Point]:
     """Find the intersection of a shape's boundary and a line.
 
     Parameters
@@ -258,7 +274,7 @@ def boundary_intersection_points(shape, p, theta):
     return start_point, end_point
 
 
-def midpoint(p1, p2):
+def midpoint(p1: shapely.Point, p2: shapely.Point) -> shapely.Point:
     """Find a point halfway beteen two points.
 
     Parameters
