@@ -3,11 +3,10 @@
 import urllib.request
 import os.path
 
+from typing import Optional
+
 from . import config_parsing
 
-from typing import Any
-
-CONFIG = "config.toml"
 
 def download_file(url: str, destination: str) -> None:
     """Download a web file's data into a local file.
@@ -81,7 +80,7 @@ def ensure_census_file(
 
 def ensure_state_shapes(
         redownload: bool = False,
-        config: dict[str, Any]| None = None
+        config: Optional[config_parsing.Config] = None
     ) -> None:
     """Ensure we have the state shape file from the census.
 
@@ -103,7 +102,7 @@ def ensure_state_shapes(
 
 def ensure_fips_identifiers(
         redownload: bool = False,
-        config: dict[str, Any]| None = None
+        config: Optional[config_parsing.Config] = None
     ) -> None:
     """Ensure we have the fips identifier table from the census.
 
@@ -127,7 +126,7 @@ def ensure_fips_identifiers(
 def ensure_state_census_blocks(
         fips_id: int,
         redownload: bool = False,
-        config: dict[str, Any]| None = None
+        config: Optional[config_parsing.Config] = None
     ) -> None:
     """Ensure we have the census block file for a state.
 
@@ -151,7 +150,7 @@ def ensure_state_census_blocks(
 
 def ensure_state_population_table(
         redownload: bool = False,
-        config: dict[str, Any]| None = None
+        config: Optional[config_parsing.Config] = None
     ) -> None:
     """Ensure we have the state population table from the census.
 

@@ -14,6 +14,7 @@ from .downloads_config import downloads_directory
 
 
 from .config import ensure_config
+from .config import Config
 
 
 from .fips_identifiers_config import fips_identifiers_directory
@@ -40,6 +41,7 @@ from .state_shapes_config import state_shapes_url
 
 
 __all__ = [
+    "Config",
     "census_blocks_directory",
     "census_blocks_filename",
     "census_blocks_location",
