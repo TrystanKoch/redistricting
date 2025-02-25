@@ -5,8 +5,8 @@ from math import sqrt
 
 from pandas import DataFrame
 
-from . import data_loading
-from . import data_cleaning
+from .. import data_loading
+from .. import data_cleaning
 
 POP_COL = "POP20"
 REPS_COL = "reps"
