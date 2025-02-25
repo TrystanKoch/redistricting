@@ -34,6 +34,9 @@ classifiers = [
   #redistrict-leastquares = ""
   #redistrict-circle-splitline = ""
 
+[tool.mypy]
+strict = true
+
 [tool.ruff]
 line-length = 79
 
@@ -45,11 +48,10 @@ line-length = 79
     "PL",  # PyLint
     "RUF", # Ruff-specific
     "PD",  # Pandas-specific Linting
-    "TRY", # Try-Except Linting
   ]
 
-  [tool.ruff.lint.pydocstyle]
-  convention = "numpy"
+    [tool.ruff.lint.pydocstyle]
+    convention = "numpy"
 
 [tool.setuptools]
 py-modules = ["redistricting"]
