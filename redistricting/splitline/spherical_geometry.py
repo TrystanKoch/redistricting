@@ -146,10 +146,14 @@ def find_great_circle_distance(
         .to_crs(lat_lon_crs_name)
         .geometry.iloc[0]
     )
+    if not isinstance(start_lat_lon, shapely.Point):
+        raise ValueError("CRS did not send point to point.")
     aeqd_crs = aeqd_from_point(start_lat_lon)
     end_aeqd = (
         geom_with_crs(end, crs)
         .to_crs(aeqd_crs)
         .geometry.iloc[0]
     )
+    if not isinstance(end_aeqd, shapely.Point):
+        raise ValueError("CRS did not send point to point.")
     return distance_to_aeqd_point(end_aeqd)
