@@ -4,10 +4,45 @@ import os
 import tomllib
 import urllib.parse
 
-from typing import Any
+from typing import Optional, TypedDict, cast
 
 
 CONFIG = "config.toml"
+
+
+class CleanedTablesConfig(TypedDict):
+    """A dictionary to represent the cleaned tables configuration settings."""
+
+    directory: str
+    state_data: dict[str,str]
+    country_data: dict[str, str]
+
+class SavedDataConfig(TypedDict):
+    """A dictionary to represent the saved_data configuration settings."""
+
+    directory: str
+    downloads: dict[str, str]
+    census_blocks: dict[str,str]
+    state_census_blocks: dict[str, str]
+    cleaned_tables: CleanedTablesConfig
+
+
+class CensusUrlConfig(TypedDict):
+    """A dictionary to represent Configuration for census data."""
+
+    census_year: str
+    census_year_short: str
+    census_blocks: dict[str, str]
+    state_shapes: dict[str, str]
+    FIPS_identifiers: dict[str, str]
+    apportionment_population: dict[str, str]
+
+class Config(TypedDict):
+    """A dictionary to represent loaded data."""
+
+    saved_data: SavedDataConfig
+    census_urls: CensusUrlConfig
+
 
 class ConfigParseError(Exception):
     """Error class to suggest that the config file is misformed."""
@@ -18,7 +53,7 @@ class ConfigParseError(Exception):
         )
 
 
-def ensure_config(config: dict[Any, Any] | None = None) -> dict[str, Any]:
+def ensure_config(config: Optional[Config] = None) -> Config:
     """Ensure a config file is defined.
 
     Check if config dictionary already defined. If so, return that dictionary.
@@ -39,14 +74,18 @@ def ensure_config(config: dict[Any, Any] | None = None) -> dict[str, Any]:
     # config file for the project and parse it.
     if not config:
         with open(CONFIG, "rb") as config_file:
-            config = tomllib.load(config_file)
+            # This cast a possible point of failure. However, it should pass
+            # silently at runtime as it is purely for type checking. Any
+            # parsing errors will be handled later on in the individual
+            # parsing functions.
+            config = cast(Config, tomllib.load(config_file))
 
     # Either pass the orignial config dictionary through, or return the newly
     # parsed configurarion dictionary.
     return config
 
 
-def downloads_directory(config: dict[str, Any] | None = None) -> str:
+def downloads_directory(config: Config | None = None) -> str:
     """Return configured downloads directory for project.
 
     Parameters
@@ -93,7 +132,7 @@ def downloads_directory(config: dict[str, Any] | None = None) -> str:
     return directory
 
 
-def state_shapes_directory(config: dict[str, Any] | None = None) -> str:
+def state_shapes_directory(config: Optional[Config] = None) -> str:
     """Return the directory for the census state shape file.
 
     Parameters
@@ -140,7 +179,7 @@ def state_shapes_directory(config: dict[str, Any] | None = None) -> str:
     return directory
 
 
-def state_shapes_filename(config: dict[str, Any] | None = None) -> str:
+def state_shapes_filename(config: Optional[Config] = None) -> str:
     """Return the filename the census state shape file.
 
     Parameters
@@ -191,7 +230,7 @@ def state_shapes_filename(config: dict[str, Any] | None = None) -> str:
     return filename
 
 
-def state_shapes_url(config: dict[Any, Any] | None = None) -> str:
+def state_shapes_url(config: Optional[Config] = None) -> str:
     """Return the census URL for the census state shape file.
 
     Parameters
@@ -240,7 +279,7 @@ def state_shapes_url(config: dict[Any, Any] | None = None) -> str:
     return url_directory
 
 
-def state_shapes_location(config: dict[str, Any] | None = None) -> str:
+def state_shapes_location(config: Optional[Config] = None) -> str:
     """Return full relative filename for the census state population file.
 
     Parameters
@@ -266,7 +305,7 @@ def state_shapes_location(config: dict[str, Any] | None = None) -> str:
     return location
 
 
-def state_population_directory(config: dict[str, Any] | None = None) -> str:
+def state_population_directory(config: Optional[Config] = None) -> str:
     """Return directory for the census state population file.
 
     Parameters
@@ -308,7 +347,7 @@ def state_population_directory(config: dict[str, Any] | None = None) -> str:
     return directory
 
 
-def state_population_filename(config: dict[Any, Any]| None = None) -> str:
+def state_population_filename(config: Optional[Config] = None) -> str:
     """Return the directory for the census state population file.
 
     Parameters
@@ -353,7 +392,7 @@ def state_population_filename(config: dict[Any, Any]| None = None) -> str:
     return filename
 
 
-def state_population_url(config: dict[Any, Any]| None = None) -> str:
+def state_population_url(config: Optional[Config] = None) -> str:
     """Return the census url for the census state population file.
 
     Parameters
@@ -399,7 +438,7 @@ def state_population_url(config: dict[Any, Any]| None = None) -> str:
     return url
 
 
-def state_population_location(config: dict[Any, Any]| None = None) -> str:
+def state_population_location(config: Optional[Config] = None) -> str:
     """Return full relative filename for the census state population file.
 
     Parameters
@@ -425,7 +464,7 @@ def state_population_location(config: dict[Any, Any]| None = None) -> str:
     return location
 
 
-def fips_identifiers_directory(config: dict[str, Any]| None = None) -> str:
+def fips_identifiers_directory(config: Optional[Config] = None) -> str:
     """Return directory for the census state FIPS identification file.
 
     Parameters
@@ -467,7 +506,7 @@ def fips_identifiers_directory(config: dict[str, Any]| None = None) -> str:
     return directory
 
 
-def fips_identifiers_filename(config: dict[str, Any]| None = None) -> str:
+def fips_identifiers_filename(config: Optional[Config] = None) -> str:
     """Return filename for the census state FIPS identification file.
 
     Parameters
@@ -506,7 +545,7 @@ def fips_identifiers_filename(config: dict[str, Any]| None = None) -> str:
     return filename
 
 
-def fips_identifiers_url(config: dict[Any, Any]| None = None) -> str:
+def fips_identifiers_url(config: Optional[Config] = None) -> str:
     """Return URL for census state FIPS identification file.
 
     Parameters
@@ -547,7 +586,7 @@ def fips_identifiers_url(config: dict[Any, Any]| None = None) -> str:
     return url
 
 
-def fips_identifiers_location(config: dict[str, Any] | None = None) -> str:
+def fips_identifiers_location(config: Optional[Config] = None) -> str:
     """Return the relative filename for the state FIPS identification file.
 
     Parameters
@@ -573,7 +612,7 @@ def fips_identifiers_location(config: dict[str, Any] | None = None) -> str:
     return location
 
 
-def census_blocks_directory(config: dict[str, Any] | None = None) -> str:
+def census_blocks_directory(config: Optional[Config] = None) -> str:
     """Return the directory for census block files.
 
     Parameters
@@ -617,7 +656,7 @@ def census_blocks_directory(config: dict[str, Any] | None = None) -> str:
 
 def census_blocks_filename(
         fips_id: int,
-        config: dict[str, Any] | None = None
+        config: Optional[Config] = None
     ) -> str:
     """Return the filename for the census block file of a state.
 
@@ -667,7 +706,7 @@ def census_blocks_filename(
 
 def census_blocks_url(
         fips_id: int,
-        config: dict[str, Any] | None = None
+        config: Optional[Config] = None
     ) -> str:
     """Return the url for the census block file of a state.
 
@@ -718,7 +757,7 @@ def census_blocks_url(
 
 def census_blocks_location(
         fips_id: int,
-        config: dict[str, Any] | None = None
+        config: Optional[Config] = None
     ) -> str:
     """Return the full relative filename for the census block file of a state.
 
@@ -747,7 +786,7 @@ def census_blocks_location(
     return location
 
 
-def state_data_directory(config: dict[str, Any]| None = None) -> str:
+def state_data_directory(config: Optional[Config] = None) -> str:
     """Return directory for processed state population lookup table.
 
     Parameters
@@ -789,7 +828,7 @@ def state_data_directory(config: dict[str, Any]| None = None) -> str:
     return directory
 
 
-def state_data_filename(config: dict[str, Any]| None = None) -> str:
+def state_data_filename(config: Optional[Config] = None) -> str:
     """Return filename for processed state population lookup table.
 
     Parameters
@@ -829,7 +868,8 @@ def state_data_filename(config: dict[str, Any]| None = None) -> str:
     # our project.
     return filename
 
-def state_data_location(config: dict[str, Any]| None = None) -> str:
+
+def state_data_location(config: Optional[Config] = None) -> str:
     """Return relative filename for processed state population lookup table.
 
     Parameters
@@ -855,7 +895,7 @@ def state_data_location(config: dict[str, Any]| None = None) -> str:
     return location
 
 
-def country_data_directory(config: dict[str, Any]| None = None) -> str:
+def country_data_directory(config: Optional[Config] = None) -> str:
     """Return directory for processed US population lookup table.
 
     Parameters
@@ -897,7 +937,7 @@ def country_data_directory(config: dict[str, Any]| None = None) -> str:
     return directory
 
 
-def country_data_filename(config: dict[str, Any]| None = None) -> str:
+def country_data_filename(config: Optional[Config] = None) -> str:
     """Return filename for processed US population lookup table.
 
     Parameters
@@ -938,7 +978,7 @@ def country_data_filename(config: dict[str, Any]| None = None) -> str:
     return filename
 
 
-def country_data_location(config: dict[str, Any]| None = None) -> str:
+def country_data_location(config: Optional[Config] = None) -> str:
     """Return relative filename for processed US population lookup table.
 
     Parameters
