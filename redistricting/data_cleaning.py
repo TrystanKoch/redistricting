@@ -1,8 +1,16 @@
 """For the tranformation of raw geographical data into working dataframes."""
 
-import geopandas as gpd
+from typing import cast
 
-def census_block_centroids(census_blocks, gnomonic_crs):
+import pandas as pd
+import geopandas as gpd
+import pyproj
+
+
+def census_block_centroids(
+        census_blocks: gpd.GeoDataFrame,
+        gnomonic_crs: pyproj.CRS
+    ) -> gpd.GeoDataFrame:
     """Turn the Census' very large dataframe into a more usable dataframe.
 
     Specifically, all of our processing will only require a central internal
@@ -26,7 +34,10 @@ def census_block_centroids(census_blocks, gnomonic_crs):
 
     """
     census_crs = census_blocks.crs
-    return (
+    if census_crs is None:
+        raise TypeError
+
+    census_blocks = cast(gpd.GeoDataFrame,
         # The Census already calculates an internal central point
         # for all census blocks. Let's turn this information into
         # our new geometry. Each block is now represented by this
@@ -48,23 +59,31 @@ def census_block_centroids(census_blocks, gnomonic_crs):
         # mean that we have not yet assigned the block to a
         # district.
         .assign(district=0)
+    )
 
+    census_blocks = cast(gpd.GeoDataFrame,
         # The splitline processing will be done in the gnomonic
         # crs, so we will store this information for later. It's
         # easiest to convert our whole dataframe to our new CRS
         # then store the results for later.
+        census_blocks
         .to_crs(gnomonic_crs)
         .assign(x=lambda gdf_: gdf_.geometry.x)
         .assign(y=lambda gdf_: gdf_.geometry.y)
+    )
 
+    census_blocks = (
         # Ultimately, we want to store the centroid geometry in
         # NAD83's latitude and longitude to facilitate further
         # processing. So we need to convert back.
+        census_blocks
         .to_crs(census_crs)
     )
 
+    return census_blocks
 
-def state_boundary(state_shape):
+
+def state_boundary(state_shape: gpd.GeoDataFrame) -> gpd.GeoSeries:
     """Find the boundary of a given state from its geographical shape.
 
     Parameters
@@ -81,7 +100,7 @@ def state_boundary(state_shape):
     return state_shape.geometry.boundary
 
 
-def apportionment_drop_pr(states):
+def apportionment_drop_pr(states: pd.DataFrame) -> pd.DataFrame:
     """Drop Puerto Rico from a list of 'state' populations.
 
     Parameters
@@ -99,7 +118,7 @@ def apportionment_drop_pr(states):
     )
 
 
-def apportionment_drop_dc(states):
+def apportionment_drop_dc(states: pd.DataFrame) -> pd.DataFrame:
     """Drop DC from a list of 'state' populations.
 
     Parameters
