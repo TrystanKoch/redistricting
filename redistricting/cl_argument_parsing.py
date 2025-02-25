@@ -2,12 +2,17 @@
 
 import sys
 
+from pandas import DataFrame
+
 FIPS="FIPS"
 ABBR="ABBR"
 STATE="STATE"
 FIPS_LEN=2
 
-def parse_state(state_arg, state_df):
+def parse_state(
+        state_arg: str,
+        state_df: DataFrame
+    ) -> str:
     """Determine which state the user wants.
 
     While most of the functions in this project require a FIPS code to
@@ -21,6 +26,11 @@ def parse_state(state_arg, state_df):
         A string representing user input
     state_df: pandas.core.frame.DataFrame
         A dataframe where we can look up a state's FIPS id
+
+    Returns
+    -------
+    str
+        The FIPS id of the state we want
 
     """
     if state_arg.isdigit() and len(state_arg) <= FIPS_LEN:
