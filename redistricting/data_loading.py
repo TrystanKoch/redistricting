@@ -46,7 +46,9 @@ def load_state_shape(fips: int) -> gpd.GeoDataFrame:
     """
     data_acquisition.ensure_state_shapes()
     state_shapes_raw = gpd.read_file(config_parsing.state_shapes_location())
-    state_shape = state_shapes_raw[state_shapes_raw["STATEFP"] == str(fips)]
+    state_shape = state_shapes_raw[
+        state_shapes_raw["STATEFP"] == str(fips).zfill(2)
+    ]
     # Cast does nothing, but there's an open problem in geopandas/pandas
     # typing system that otherwise raises errors.
     state_shape = cast(gpd.GeoDataFrame, state_shape)
