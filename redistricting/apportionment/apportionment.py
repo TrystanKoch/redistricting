@@ -3,6 +3,8 @@
 from enum import StrEnum
 from math import sqrt
 
+from typing import cast
+
 from pandas import DataFrame
 
 from .. import data_loading
@@ -101,9 +103,11 @@ def huntington_hill(
 
     while reps > 0 or tmp_df[REPS_COL].min() < min_state_reps:
         next_state_id = tmp_df.avg_district_pop.idxmax(axis=0)
-        tmp_df.loc[next_state_id, REPS_COL] += 1
-        p = tmp_df.loc[next_state_id, POP_COL]
-        n = tmp_df.loc[next_state_id, REPS_COL]
+        r: int = cast(int, tmp_df.loc[next_state_id, REPS_COL])
+        r += 1
+        tmp_df.loc[next_state_id, REPS_COL] = r
+        p: int = cast(int, tmp_df.loc[next_state_id, POP_COL])
+        n: int = cast(int, tmp_df.loc[next_state_id, REPS_COL])
         tmp_df.loc[next_state_id, "avg_district_pop"] = p/sqrt(n*(n+1))
         reps -= 1
 
